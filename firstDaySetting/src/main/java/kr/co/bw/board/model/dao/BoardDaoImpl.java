@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 
 
-@Repository("trainerDao")
+@Repository("boardDao")
 public class BoardDaoImpl {
 
 	@Autowired

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import kr.co.bw.board.model.dao.BoardDaoImpl;
 
-@Service("trainerService")
+@Service("boardService")
 public class BoardServiceImpl {
 	@Autowired
-	@Qualifier("trainerDao")
+	@Qualifier("boardDao")
 	private BoardDaoImpl dao;
 	
 }

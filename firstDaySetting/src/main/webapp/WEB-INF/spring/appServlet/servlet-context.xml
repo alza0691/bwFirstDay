@@ -22,10 +22,6 @@
 		
 	</beans:bean>
 	
-	<context:component-scan base-package="kr.co.healthner" />
+	<context:component-scan base-package="kr.co.bw" />
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
-	
-	
-	
-	
 </beans:beans>

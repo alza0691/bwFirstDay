@@ -11,6 +11,6 @@
 </head>
 
 <body>
-	<h1>첫날</h1>
+	<a href="/bw/board/boardList.do">보드리스트로 이동</a>
 </body>
 </html>

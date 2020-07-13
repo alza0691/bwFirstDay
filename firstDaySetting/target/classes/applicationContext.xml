@@ -47,24 +47,5 @@
 	<!-- Schedule을 사용하기 위해 어노테이션 사용 설정 -->
 	<task:annotation-driven/>
 	
-	<!-- annotation 방식으로 선언 -->
-	<aop:aspectj-autoproxy/>
-	
-	<!-- 웹소켓 설정 -->
-	<websocket:handlers>
-		<websocket:mapping handler="cardHandler" path="/card.do"/>
-		<websocket:handshake-interceptors>
-			<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></bean>
-		</websocket:handshake-interceptors>
-	</websocket:handlers>
-	
-	<!-- 메일 알림용 웹소켓 설정 -->
-	<websocket:handlers>
-		<websocket:mapping handler="mailCheckScheduled" path="/healthner/mail/mailCheck.do"/>
-		<websocket:handshake-interceptors>
-			<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
-		</websocket:handshake-interceptors>
-	</websocket:handlers>
-	
 	<context:component-scan base-package="kr.co.bw.board"/>
 </beans>

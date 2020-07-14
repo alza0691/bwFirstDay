@@ -1,5 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="board">
+	<select id="selectBoardList" resultType="board">
+	select *
+		from(
+			select rownum as rnum, b.* from
+				(select
+					board_no as boardNo,
+					board_title as boardTitle,
+					board_content as boardContent,
+					board_writer as boardWriter,
+					board_date as boardDate
+				from board order by board_no desc
+				)b
+			)where rnum between #{start} and #{end}
+	</select>
+	<select id="oneContent" parameterType="_int" resultType="board">
+		select
+			board_no as boardNo,
+			board_title as boardTitle,
+			board_content as boardContent,
+			board_writer as boardWriter,
+			board_date as boardDate	
+		from board
+		where board_no = #{boardNo}
+	</select>
+	<delete id="boardDelete" parameterType="_int">
+		delete from board where board_no = #{boardNo}
+	</delete>
+	<insert id="boardWrite" parameterType="board">
+		insert into board values(
+			board_seq.nextval,
+			#{boardTitle},
+			#{boardContent},
+			#{boardWriter},
+			sysdate
+		)
+	</insert>
+	<update id="boardUpdate" parameterType="board">
+		update board
+		set
+			board_title = #{boardTitle},
+			board_content = #{boardContent}
+		where board_no = #{boardNo}
+	</update>
+	<select id="boardUpdateFrm" parameterType="_int" resultType="board">
+		select
+			board_no as boardNo,
+			board_title as boardTitle,
+			board_content as boardContent,
+			board_writer as boardWriter,
+			board_date as boardDate
+		from board
+		where board_no = #{boardNo}
+	</select>
+	<select id="selectMapperInfoCount" resultType="_int">
+		select count(*) from board
+	</select>
 
+  
 </mapper>

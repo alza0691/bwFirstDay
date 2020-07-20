@@ -136,6 +136,9 @@
 					${pageNavi }
 					<a href="/bw/board/boardList.do?reqPage=${totalPage }">맨뒤</a>
 				</div>
+				<div>
+					<a href="/bw/board/boardList.do" style="disply: block; float: right;">리스트로</a>
+				</div>
 			</div>
 		</div>
 		</div>

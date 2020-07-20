@@ -36,7 +36,7 @@
 	<section>
 		<div class="container">
 		<h1>글쓰기</h1>
-			<form class="boardWrite" action="/bw/board/boardWrite.do" method="post">
+			<form class="boardWrite.do" action="/bw/board/boardWrite.do" method="post" id="form">
 				<table>
 					<tr>
 						<td width="15%" class="right">날짜</td>
@@ -46,26 +46,26 @@
 	                </tr>
 					<tr>
 						<td class="right">글쓴이</td>
-						<td><input type="text" name="boardWriter" id="boardWriter" required></td>
+						<td><input type="text" name="boardWriter" id="boardWriter" required placeholder="20자 이하로 작성하세요."></td>
 					</tr>
 					<tr>
 						<td class="right">제목</td>
-						<td><input type="text" name="boardTitle" id="boardTitle" required></td>
+						<td><input type="text" name="boardTitle" id="boardTitle" required placeholder="40자 이하로 작성하세요."></td>
 					</tr>
 					<tr>
 						<td class="right">내용</td>
 						<td>
 							<textarea name="boardContent" id="boardContent" cols="30" rows="20" style="width:100%; resize: none;"
-							placeholder="내용을 입력하세요" required></textarea>
+							placeholder="1000자 이하로 작성하세요." required></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td class="right">비밀번호</td>
-						<td><input type="password" name="boardPw" required></td>
+						<td><input type="password" name="boardPw" id="boardPw" required placeholder="비밀번호를 입력해 주세요."></td>
 					</tr>
 				</table>
 			</form>
-			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;" onclick="buttonClick();">제출</button>
+			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">뒤로가기</button>
 		</div>
 	</section>	
@@ -82,43 +82,74 @@
 		  mm = '0' + mm;
 		} 
 		var today = yy+'/'+mm+'/'+dd;
-		document.getElementById ('dateShow').innerHTML = today;		
+		document.getElementById ('dateShow').innerHTML = today;			
 		
 		$(function(){
 			$(".return").click(function(){
 				location.href="/bw/board/boardList.do";
 			});
 		});
-			
-			//trim = 공백제거
-			//onclick으로 메소드 만들어서 리턴줘서 다시 돌아가서 submit 안되게
-			//onclick으로 하면 trim이 필요없음
+		
+		$(function(){
+			$("#boardWriter").on("keyup", function(){
+				var checkCount = $(this).val().length;
+				var boardWriter = $(this).val();					
+				var remain = 20-checkCount;
+				if ($.trim($("#boardWriter").val())==""){
+					alert("빈칸을 입력할 수 없습니다.")
+					$("#boardWriter").val(boardWriter.slice(0,0));
+					$("#boardWriter").focus();
+					return false;
+				} else if(remain < 0){
+					alert("20를 초과할 수 없습니다.");
+					$("#boardWriter").val(boardWriter.slice(0,20));
+					return false;
+				}
+			});
 
-		function buttonClick(){
-			var titleCheck= /^[0-9a-zA-Zㄱ-ㅎ가-힣~!@#$%^&*/()<>_+`=&lt;&gt;][ 1-9A-Za-zㄱ-ㅎ가-힣~!@#$%^&*/()<>_+`=&lt;&gt;]{1,30}$/;
-			var contentCheck = /[ 0-9A-Za-zㄱ-ㅎ가-힣~!@#$%^&*()<>_+`=]{2,1000}$/;
-			var writerCheck = /(^[0-9a-zA-Zㄱ-ㅎ가-힣][1-9a-zA-Zㄱ-ㅎ가-힣]{1,4})$/;
-			
-			if(!writerCheck.test($('#boardWriter').val())){
-				alert("글쓴이를 규칙에 맞게 입력해 주세요. 첫글자는 공백이 안되고 1글자 이상 5글자 이하로만 가능 합니다.");
+			$("#boardTitle").on("keyup", function(){
+				var checkCount = $(this).val().length;
+				var boardTitle = $(this).val();					
+				var remain = 40-checkCount;
+				if ($.trim($("#boardTitle").val())==""){
+					alert("빈칸을 입력할 수 없습니다.")
+					$("#boardTitle").val(boardTitle.slice(0,0));
+					$("#boardTitle").focus();
+					return false;
+				} else if(remain < 0){
+					alert("40글자를 초과할 수 없습니다.");
+					$("#boardTitle").val(boardTitle.slice(0,40));
+					return false;
+				}
+			});
+			$("#boardContent").on("keyup", function(){
+				var checkCount = $(this).val().length;
+				var boardContent = $(this).val();					
+				var remain = 1000-checkCount;
+				if(remain < 0){
+					alert("1000글자를 초과할 수 없습니다.");
+					$("#boardContent").val(boardContent.slice(0,1000));
+					return false;
+				} 
+			});
+		});
+		
+		$("#submit").click(function(){
+			if($("#boardWriter").val() == ""){
 				$("#boardWriter").focus();
-				return false;
-			}
-			
-			if(!titleCheck.test($('#boardTitle').val())){
-				alert("제목을 규칙에 맞게 입력해 주세요. 첫글자는 공백이 안되고 2글자 이상 30글자 이하만 가능합니다.");
+				alert("글쓴이를 입력해 주세요.");
+			} else if ($("#boardTitle").val() == ""){
 				$("#boardTitle").focus();
-				return false;
-			}
-
-			if(!contentCheck.test($('#boardContent').val())){
-				alert("내용을 규칙에 맞게 입력해 주세요. 2글자 이상 1000자 이하만 가능합니다.");
+				alert("제목을 입력해 주세요.");
+			} else if ($("#boardContent").val() ==""){
 				$("#boardContent").focus();
-				return false;
+				alert("콘텐츠를 입력해 주세요.");
+			} else if($("boardPw").val()==""){
+				$("#boardPw").focus();
+				alert("비밀번호를 입력해 주세요.");
+			} else{
+				$("#form").submit();
 			}
-			$(".boardWrite").submit();
-		};
-
-			
+		});			
 	</script>
 </html>

@@ -110,7 +110,7 @@
 				<input type="hidden" name="boardNo" id="boardNo" value="${oneContent.boardNo }">
 				<button type="button" class="update">수정</button>
 				<button type="button" class="delete">삭제</button>
-				<button type="button" class="return">뒤로가기</button>
+				<button type="button" class="return">목록으로</button>
 			</form>
 		</div>
 			

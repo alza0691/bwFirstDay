@@ -22,86 +22,80 @@ public class BoardServiceImpl {
 		map.put("type", type);
 		map.put("keyword", keyword);
 		
-		//한 페이지당 식사 기록 수
+		//한 페이지당 게시물
 		int numPerPage = 5;
 		//총 게시글 수
 		int totalCount = dao.selectMapperInfoCount(map);
+		System.out.println("토탈페이지: " + totalCount);
 		//총 페이지 수
-		System.out.println(totalCount);
 		int totalPage;
-		if (totalCount % numPerPage == 0) {
-			totalPage = totalCount / numPerPage;
-		} else {
-			totalPage = totalCount / numPerPage + 1;
+		//총 페이지 수 연산
+		if (totalCount % numPerPage == 0) {				//총 페이지 수와 한페이당 게시물의 나머지가 0이면
+			totalPage = totalCount / numPerPage;		//(총 페이지 수 = 총 게시글 / 한페이지당 게시물)
+		} else {										//나누어 지면 총 페이지에서 넘어가지 않고 딱 떨어짐
+			totalPage = totalCount / numPerPage + 1;	//그렇지 않은 것은 한 페이지가 더 필요함
 		}	
 		
+		//조회해 올 게시물 시작번호와 끝번호 연산
 		int start = (reqPage - 1) * numPerPage + 1;
 		int end = reqPage * numPerPage;
+		
+		//시작번호와 끝번호를 map에 저장
 		map.put("start", String.valueOf(start));
 		map.put("end", String.valueOf(end));
+		
+		//해당 페이지의 게시물들 조회
 		List<BoardVO> list = dao.selectMapperInfo(map);
 		System.out.println("totalPage = " + totalPage);
 		System.out.println("start = " + start);
 		System.out.println("end = "+end);
 		System.out.println(list);
 		
+		
+		//페이지 네비게이션 작성 시작
 		StringBuffer pageNavi = new StringBuffer();
-		int pageNaviSize = numPerPage;
-		int pageNo = ((reqPage ) / pageNaviSize) * pageNaviSize+1;
 		
-		int pageLeft = pageNo-1;
-		int pageRight = pageNo+5;
+		//페이지 네비게이션 길이
+		int pageNaviSize = 5;
+		int pageNo = ((reqPage -1) / pageNaviSize) * pageNaviSize+1; //해당 게시물의 페이지 네비게이션 첫번째 수를 조회
 		
-		if(reqPage != 0) {
-			pageNavi.append("<a");
-			if(reqPage > numPerPage) {
-				pageNavi.append(" href='/bw/board/boardList.do?reqPage="+pageLeft+"'");
-			}
-			pageNavi.append(">이전</a>");
+		pageNavi.append("<a");
+		if(pageNo != 1) {																	//해당 첫번째 수가 1이 아니면
+			pageNavi.append(" href='/bw/board/boardList.do?reqPage="+(pageNo -1));			//이전으로 이동할 수 있게끔 하고
+			if(type!=null) {																//검색 값이 있으면
+				pageNavi.append("&type=" + type + "&keyword=" + keyword);					//검색 조건과 키워드를 검색
+			}																				//없으면 통과
+			pageNavi.append("'");
 		}
+		pageNavi.append(">이전</a>");															//이전버튼은 계속하여 위치할 수 있도록 함
 		
-		if(pageNo != 1) {
-			pageNavi.append("<a href='/bw/board/boardList.do?reqPage="+(pageNo -1));
-			if(type!=null) {
-				pageNavi.append("&type=" + type + "&keyword=" + keyword);
-			}
-			pageNavi.append("'></a>");
-		}
-		
-		for (int i = 0; i < pageNaviSize; i++) {
-					
-			if (pageNo == reqPage) {
-				pageNavi.append("<a>" + pageNo + "</a>");
+		for (int i = 0; i < pageNaviSize; i++) {											//페이지 네비게이션 사이즈만큼 출력
+			if (pageNo == reqPage) {														//해당 게시물의 위치일 때  
+				pageNavi.append("<a>" + pageNo + "</a>");									//넘어갈 수 없이 빈값으로 처리
 			} else {
-				pageNavi.append("<a href='/bw/board/boardList.do?reqPage=" + pageNo);
-				if(type!=null) {
-					pageNavi.append("&type=" + type + "&keyword=" + keyword);
-				}
+				pageNavi.append("<a href='/bw/board/boardList.do?reqPage=" + pageNo);		//게시물 페이지가 작거나 클 때 넘어갈 수 있도록 처리
+				if(type!=null) {															//검색 값이 있으면
+					pageNavi.append("&type=" + type + "&keyword=" + keyword);				//검색 조건과 키워드를 검색
+				}																			//없으면 통과
 				pageNavi.append("'>" + pageNo + "</a>");
 			}
 				
 			pageNo++;
 			
-			if (pageNo > totalPage) {
+			if (pageNo > totalPage) {														//만약 해당게시물의 페이지가 총 페이지수보다 높을 시에는 통과
 				break;
 			}
 		}
 		
-		if (pageNo <= totalPage) {
-			pageNavi.append("<a href='/bw/board/boardList.do?reqPage=" + pageNo);
-			if (type != null) {
-				pageNavi.append("&type=" + type + "&keyword=" + keyword);
-			}
-			pageNavi.append("'></a>");
-		}
-		
-		if(reqPage != 0) {
 		pageNavi.append("<a");
-			if(pageNo <= totalPage) {
-				pageNavi.append(" href='/bw/board/boardList.do?reqPage="+pageRight+"'");
-			}
-			pageNavi.append(">다음</a>");
+		if (pageNo < totalPage) {															//해당게시물의 페이지가 총 페이지수보다 작을 때 
+			pageNavi.append(" href='/bw/board/boardList.do?reqPage=" + pageNo);				//이동할 수 있도록 처리
+			if (type != null) {																//검색 조건이 있을 시
+				pageNavi.append("&type=" + type + "&keyword=" + keyword);					//검색 조건을 넣음
+			}																				//없으면 통과
+			pageNavi.append("'");
 		}
+		pageNavi.append(">다음</a>");															//다음버튼은 계속하여 위치할 수 있도록 함
 		
 		BoardData data = new BoardData();
 		data.setList(list);

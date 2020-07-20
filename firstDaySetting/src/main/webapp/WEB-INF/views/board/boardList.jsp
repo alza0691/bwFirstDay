@@ -11,6 +11,7 @@
 <style>
 	table, tr, td{
 		border: 1px solid black;
+		text-align: center;
 	}
 	.pagingBlock>ul>li{
 		display: block;
@@ -36,13 +37,46 @@
     span{
     	float:right;
     }
-    li{
-    	float: left;
-    }
+    
     .textCenter{
     	text-align: center;
-    	float: right;
     }
+    .serachBox>div>form>* {
+		float: left;
+	}
+	
+	.serachBox>div {
+		display: inline-block;
+		overflow: hidden;
+	}
+	
+	.serachBox {
+		text-align: center;
+		margin: 0 auto;
+	}
+	
+	.input {
+		padding: 1px 6px;
+		height: 26px;
+		box-sizing: border-box;
+		float: right;
+	}
+	.title>p{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 300px;
+		height: 20px;
+	}
+	
+	.wrapper{
+	margin: 0 auto;
+	}
+	
+	.pagingBlock>a{
+		margin: 10px;
+	}
+	
 
 </style>
 <body>
@@ -57,27 +91,58 @@
 					<td width="20%">글쓴이</td>
 					<td width="30%">날짜</td>
                 </tr>
-                <c:forEach items="${list}" var="list" varStatus="status">
+          				
+				<c:set var="num" value="${totalCount - ((reqPage-1) * numPerPage) }"/>
+				<c:forEach items="${list}" var="list" varStatus="status">
                 	<tr>
-	                	<td>${status.count }</td>
-	                	<td><a href="/bw/board/contentPage.do?boardNo=${list.boardNo }">${list.boardTitle }</a></td>
-	                	<td>${list.boardWriter }</td>
+	                	<td>${num}</td>
+	                	<td class="title" style="text-align: left;"><p><a href="/bw/board/contentPage.do?boardNo=${list.boardNo }">${list.boardTitle2 }</a></p></td>
+	                	<td>${list.boardWriter2 }</td>
 	                	<td>${list.boardDate }</td>
 	                </tr>
+	                <c:set var="num" value="${num-1 }"></c:set>
 	            </c:forEach>
 			</table>
-			<div class="paging">
-				<div class="textCenter">
-					<div class="pagingBlock">
-						<ul style="text-align:center;">
-							<li>${pageNavi }</li>
-						</ul>
-					</div>
+			<br>
+		<div class="serachBox">
+		<div class="wrapper">
+		<form action="/bw/board/boardList.do" method="get">
+				<input type="hidden" name="reqPage" value="1">
+					<select name="type" class="input">
+						<c:choose>
+							<c:when test="${type eq 'boardTitle' }">
+								<option value="boardTitle" selected>제목</option>
+								<option value="boardWriter">작성자</option>
+							</c:when>
+							<c:when test="${type eq 'boardWriter' }">
+								<option value="boardTitle">제목</option>
+								<option value="boardWriter" selected>작성자</option>
+							</c:when>
+							<c:otherwise>
+								<option value="boardTitle">제목</option>
+								<option value="boardWriter">작성자</option>
+							</c:otherwise>
+						</c:choose>
+					</select>
+				<input type="text" name="keyword" class="input" value="${keyword }">
+				<input type="submit" value="검색" class="input">
+		</form>
+		</div>
+		</div>
+		<div class="paging">
+			<div class="textCenter">
+				<div class="pagingBlock">
+					<a href="/bw/board/boardList.do?reqPage=1">맨앞</a>
+					${pageNavi }
+					<a href="/bw/board/boardList.do?reqPage=${totalPage }">맨뒤</a>
 				</div>
 			</div>
+		</div>
 		</div>
 	</section>
 </body>
 <script>
+
+
 </script>
 </html>

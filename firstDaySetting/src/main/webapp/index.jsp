@@ -5,7 +5,6 @@
 <html lang="en">
 <head>
 <title>첫날세팅</title>
-<link rel="icon" href="/resources/images/favicon.png">
 <script type="text/javascript"
 	src="http://code.jquery.com/jquery-3.3.1.js"></script>
 </head>

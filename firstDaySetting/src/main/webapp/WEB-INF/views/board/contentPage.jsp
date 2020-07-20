@@ -54,6 +54,8 @@
         
     .container textarea {
         resize: none;
+        border: 0;
+        outline: none;  
     }
         
     .commentList {
@@ -68,47 +70,102 @@
      	float: left;
      	color: black;
     }  
+    button{
+	    float: right;
+	    margin-left: 10px;
+    }
+
 </style>
 <body>
 	<section>
 		<div class="container">
 		<h1>콘텐츠</h1>
-			<table>
-				<tr>
-					<td>날짜</td>
-					<td>${oneContent.boardDate }</td>
-                </tr>
-				<tr>
-					<td>글쓴이</td>
-					<td>${oneContent.boardWriter }</td>
-				</tr>
-				<tr>
-					<td>제목</td>
-					<td>${oneContent.boardTitle }</td>
-				</tr>
-				<tr>
-					<td>내용</td>
-					<td>${oneContent.boardContent }</td>
-				</tr>
-			</table>
-			
-			<br>
-			<button type="button" class="update">수정</button>
-			<button type="button" class="delete">삭제</button>
+			<form method="post">
+				<table style="word-break:break-all">
+					<tr>
+						<td style="width: 100px; text-align: right;">날짜</td>
+						<td>${oneContent.boardDate }</td>
+	                </tr>
+					<tr>
+						<td style="text-align: right;">글쓴이</td>
+						<td>${oneContent.boardWriter2 }</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">제목</td>
+						<td>${oneContent.boardTitle2 }</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">내용</td>
+						<td style="height: 300px;">
+							<textarea rows="20" cols="30" style="width:500px;" readonly>${oneContent.boardContent2 }</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">비밀번호</td>
+						<td><input type="password" id="boardPw" name="boardPw" style="width: 100%" required></td>
+					</tr>
+				</table>
+				<br>
+				<input type="hidden" id="boardContent2" value="${oneContent.boardContent }">
+				<input type="hidden" name="boardNo" id="boardNo" value="${oneContent.boardNo }">
+				<button type="button" class="update">수정</button>
+				<button type="button" class="delete">삭제</button>
+				<button type="button" class="return">뒤로가기</button>
+			</form>
 		</div>
+			
 
 	</section>	
 </body>
 <script>		        
 	$(function(){
 		$(".update").click(function(){
-			location.href="/bw/board/boardUpdateFrm.do?boardNo="+${oneContent.boardNo};
+			$.ajax({
+				url: "/bw/board/pwCheck.do",
+				data:{
+					boardPw:$("#boardPw").val(),
+					boardNo:$("#boardNo").val()
+					},
+				type: "get",
+				success: function(data){
+					if (data == '1') {
+                        location.href="/bw/board/boardUpdateFrm.do?boardNo="+${oneContent.boardNo};
+                    } else {
+                        alert('비밀번호를 확인해 주세요');
+                    }
+				},
+				error: function(){
+					alert("관리자에게 문의해주세요")
+				}
+			});
+		});
+		$(".return").click(function(){
+			location.href="/bw/board/boardList.do";
 		});
 		$(".delete").click(function(){
 			if(confirm("삭제하시겠습니까?")){
-				location.href="/bw/board/boardDelete.do?boardNo="+${oneContent.boardNo};
-			} 
-		});
+		    	 $.ajax({
+	                    url: "/bw/board/boardDelete.do",
+	                    data: {
+	                    	boardNo: $("#boardNo").val(),
+	                    	boardPw: $("#boardPw").val()
+	                    },
+	                    type: "get",
+	                    success: function(data) {
+	                        if (data == '1') {
+	                        	alert('삭제 완료 하였습니다.');
+	            				location.href="/bw/board/boardList.do";
+	                        } else {
+	                            alert('비밀번호를 확인해 주세요');
+	                        }
+			         },
+			      error : function(){
+			    	  alert("관리자에게 문의해 주세요");
+			      }
+			    }) 
+		    	}
+			})
 	});
+
 </script>
 </html>

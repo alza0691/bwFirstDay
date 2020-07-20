@@ -22,9 +22,9 @@ public class BoardDaoImpl {
 		return sqlSession.selectOne("board.oneContent", boardNo);
 	}
 
-	public int boardDelete(int boardNo) {
+	public int boardDelete(BoardVO boardVo) {
 		// TODO Auto-generated method stub
-		return sqlSession.delete("board.boardDelete",boardNo);
+		return sqlSession.delete("board.boardDelete",boardVo);
 	}
 
 	public int boardWrite(BoardVO boardVo) {
@@ -43,14 +43,19 @@ public class BoardDaoImpl {
 		return sqlSession.selectOne("board.boardUpdateFrm",boardNo);
 	}
 
-	public int selectMapperInfoCount() {
+	public int selectMapperInfoCount(HashMap<String, String> map) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectOne("board.selectMapperInfoCount");
+		return sqlSession.selectOne("board.selectMapperInfoCount", map);
 	}
 
-	public List<BoardVO> selectMapperInfo(HashMap<String, Integer> map) {
+	public List<BoardVO> selectMapperInfo(HashMap<String, String> map) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("board.selectBoardList", map);
+	}
+
+	public BoardVO pwCheck(BoardVO boardVo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.pwCheck",boardVo);
 	}
 	
 }

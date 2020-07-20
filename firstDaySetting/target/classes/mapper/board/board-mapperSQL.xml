@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="board">
-	<select id="selectBoardList" resultType="board">
+	<select id="selectBoardList" parameterType="map" resultType="board">
 	select *
 		from(
 			select rownum as rnum, b.* from
@@ -11,8 +11,16 @@
 					board_content as boardContent,
 					board_writer as boardWriter,
 					board_date as boardDate
-				from board order by board_no desc
-				)b
+				from board 
+					<if test="type!=null">
+						<if test="type.equals('boardTitle')">
+							where board_title like '%'||#{keyword}||'%'
+						</if>
+						<if test="type.equals('boardWriter')">
+							where board_writer like '%'||#{keyword}||'%'
+						</if>
+					</if>
+				order by board_no desc)b
 			)where rnum between #{start} and #{end}
 	</select>
 	<select id="oneContent" parameterType="_int" resultType="board">
@@ -25,8 +33,8 @@
 		from board
 		where board_no = #{boardNo}
 	</select>
-	<delete id="boardDelete" parameterType="_int">
-		delete from board where board_no = #{boardNo}
+	<delete id="boardDelete" parameterType="board">
+		delete from board where board_no = #{boardNo} and board_pw = #{boardPw}
 	</delete>
 	<insert id="boardWrite" parameterType="board">
 		insert into board values(
@@ -34,7 +42,8 @@
 			#{boardTitle},
 			#{boardContent},
 			#{boardWriter},
-			sysdate
+			sysdate,
+			#{boardPw}
 		)
 	</insert>
 	<update id="boardUpdate" parameterType="board">
@@ -43,6 +52,7 @@
 			board_title = #{boardTitle},
 			board_content = #{boardContent}
 		where board_no = #{boardNo}
+		
 	</update>
 	<select id="boardUpdateFrm" parameterType="_int" resultType="board">
 		select
@@ -54,9 +64,26 @@
 		from board
 		where board_no = #{boardNo}
 	</select>
-	<select id="selectMapperInfoCount" resultType="_int">
+	<select id="selectMapperInfoCount" parameterType="map" resultType="int">
 		select count(*) from board
+		<if test="type!=null">
+			<if test="type.equals('boardTitle')">
+				where board_title like '%'||#{keyword}||'%'
+			</if>
+			<if test="type.equals('boardWriter')">
+				where board_writer like '%'||#{keyword}||'%'
+			</if>
+		</if>
 	</select>
-
+	<select id="pwCheck" parameterType="board" resultType="board">
+		select
+			board_no as boardNo,
+			board_pw as boardPw
+		from board
+		where board_no=#{boardNo} and board_pw=#{boardPw}
+	</select>
+	<select id="boardCheck" resultType="board" parameterType="board">
+		select 
+	</select>
   
 </mapper>

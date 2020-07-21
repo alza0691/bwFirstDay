@@ -13,7 +13,7 @@
 					board_date as boardDate
 				from board 
 					<if test="type!=null">
-						<if test="type.equals('boardTitle')">
+						<if test="type.equals('boardTitle')"> 
 							where board_title like '%'||#{keyword}||'%'
 						</if>
 						<if test="type.equals('boardWriter')">

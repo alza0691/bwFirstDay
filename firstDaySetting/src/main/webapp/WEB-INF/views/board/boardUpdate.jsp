@@ -14,7 +14,7 @@
     .container{
         padding: 15px;
         margin: auto;
-        width: 600px;
+        width: 800px;
     }
     table, input{
     	width: 100%;
@@ -37,7 +37,7 @@
 			<form action="/bw/board/boardUpdate.do" method="post" id="boardUpdate">
 				<table>
 					<tr>
-						<td class="right" style="width:85px;">날짜</td>
+						<td class="right" style="width:13.5%;">날짜</td>
 						<td>${boardVo.boardDate }</td>
 	                </tr>
 					<tr>
@@ -51,42 +51,79 @@
 					<tr>
 						<td class="right">내용</td>
 						<td>
-							<textarea name="boardContent" name="boardContent" id="boardContent" cols="30" rows="20"  style="width:100%; resize: none;"
+							<textarea name="boardContent" id="boardContent" class="autosize" cols="30" rows="20"  style="width:100%; min-height:300px; resize: none;"
 							placeholder="내용을 입력하세요" required>${boardVo.boardContent }</textarea>
 						</td>
 					</tr>
 				</table>
 				<input type="hidden" id="boardNo" name="boardNo" value="${boardVo.boardNo }">
 			</form>
-			<button type="button" id="modifyBtn" class="button" style="margin-top: 10px; margin-left: 10px;" onclick="buttonClick();">수정</button>
-			<button type="button" class="button return" style="width: 70px; margin-top: 10px; margin-left: 10px;">뒤로가기</button>
+			<button type="button" id="modifyBtn" class="button" style="margin-top: 10px; margin-left: 10px;">수정</button>
+			<button type="button" id="cancelBtn" class="button" style="margin-top: 10px; margin-left: 10px;">취소</button>
+			<button type="button" class="button return" style="width: 70px; margin-top: 10px; margin-left: 10px;">목록으로</button>
+			<br><br><br>
 		</div>
 	</section>	
 </body>
 <script>
+	$(document).ready(function() {
+		var autosize = $(".autosize"); 
+		var size = autosize.prop('scrollHeight');
+		autosize.css("height",size);
+	});
 
 	$(function(){
 			$(".return").click(function(){
+				location.href="/bw/board/boardList.do";
+			});
+			$("#cancelBtn").click(function(){
 				location.href="/bw/board/contentPage.do?boardNo="+${boardVo.boardNo};
 			});
 		});
-	function buttonClick(){
-		var titleCheck= /^[0-9a-zA-Zㄱ-ㅎ가-힣~!@#$%^&*()<>_+`=&lt;&gt;][ 1-9A-Za-zㄱ-ㅎ가-힣~!@#$%^&*/()<>_+`=&lt;&gt;]{1,30}$/;
-		var contentCheck = /[ 0-9A-Za-zㄱ-ㅎ가-힣~!@#$%^&*()<>_+`=]{2,1000}$/;
-		
-		if(!titleCheck.test($('#boardTitle').val())){
-			alert("제목을 규칙에 맞게 입력해 주세요. 첫글자는 공백이 안되고 2글자 이상 30글자 이하만 가능합니다.");
+	
+		$(function(){			
+			$("#boardTitle").on("change keyup mousedown", function(){
+				if($("#boardTitle").val().length != ""){
+					var checkCount = $(this).val().length;
+					var boardTitle = $(this).val();					
+					var remain = 40-checkCount;
+					if(remain < 0){
+						alert("40글자를 초과할 수 없습니다.");
+						$("#boardTitle").val(boardTitle.slice(0,40));
+						return false;
+					} else if ($.trim($("#boardTitle").val())==""){
+							alert("빈칸을 입력할 수 없습니다.")
+							$("#boardTitle").val(boardTitle.slice(0,0));
+							return false;
+						}
+					}
+				});
+			
+		$("#boardContent").on("change keyup down", function(){
+			var checkCount = $(this).val().length;
+			var boardContent = $(this).val();					
+			var remain = 1000-checkCount;
+			if(remain < 0){
+				alert("1000글자를 초과할 수 없습니다.");
+				$("#boardContent").val(boardContent.slice(0,1000));
+				return false;
+			} 
+		});
+	});
+	
+	$("#modifyBtn").click(function(){
+		if ($("#boardTitle").val() == ""){
 			$("#boardTitle").focus();
-			return false;
-		}
-
-		if(!contentCheck.test($('#boardContent').val())){
-			alert("내용을 규칙에 맞게 입력해 주세요. 2글자 이상 1000자 이하만 가능합니다.");
+			alert("제목을 입력해 주세요.");
+		} else if ($("#boardContent").val() ==""){
 			$("#boardContent").focus();
-			return false;
+			alert("콘텐츠를 입력해 주세요.");
+		} else{
+			$("#boardUpdate").submit();
 		}
-		$("#boardUpdate").submit();
-	};
+	});	
+
+
 </script>
 </html>
 

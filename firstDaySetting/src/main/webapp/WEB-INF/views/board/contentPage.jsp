@@ -18,7 +18,7 @@
     .container{
         padding: 15px;
         margin: auto;
-        width: 600px;
+        width: 800px;
     }
     section{
         position: absolute;
@@ -38,14 +38,6 @@
     .table-wrapper, .comment-write, .comment-wrapper {
         width: 600px;
         margin: 0 auto;
-    }
-        
-    .table-wrapper>.table th {
-        width: 20%;
-    }
-    
-    .table-wrapper>.table td {
-        width: 80%;
     }
     
     .comment-write td {
@@ -83,8 +75,8 @@
 			<form method="post">
 				<table style="word-break:break-all">
 					<tr>
-						<td style="width: 100px; text-align: right;">날짜</td>
-						<td>${oneContent.boardDate }</td>
+						<td style="width: 12%; text-align: right;">날짜</td>
+						<td style="width: 78%;">${oneContent.boardDate }</td>
 	                </tr>
 					<tr>
 						<td style="text-align: right;">글쓴이</td>
@@ -97,7 +89,7 @@
 					<tr>
 						<td style="text-align: right;">내용</td>
 						<td style="height: 300px;">
-							<textarea rows="20" cols="30" style="width:500px;" readonly>${oneContent.boardContent2 }</textarea>
+							<textarea class="autosize" rows="20" cols="30" style="width:100%;" readonly>${oneContent.boardContent2 }</textarea>
 						</td>
 					</tr>
 					<tr>
@@ -111,13 +103,20 @@
 				<button type="button" class="update">수정</button>
 				<button type="button" class="delete">삭제</button>
 				<button type="button" class="return">목록으로</button>
+				<br><br><br>
 			</form>
 		</div>
 			
 
 	</section>	
 </body>
-<script>		        
+<script>
+	$(document).ready(function() {
+		var autosize = $(".autosize"); 
+		var size = autosize.prop('scrollHeight');
+		autosize.css("height",size);
+	});
+
 	$(function(){
 		$(".update").click(function(){
 			$.ajax({
@@ -142,29 +141,47 @@
 		$(".return").click(function(){
 			location.href="/bw/board/boardList.do";
 		});
+		
+		
 		$(".delete").click(function(){
-			if(confirm("삭제하시겠습니까?")){
-		    	 $.ajax({
-	                    url: "/bw/board/boardDelete.do",
-	                    data: {
-	                    	boardNo: $("#boardNo").val(),
-	                    	boardPw: $("#boardPw").val()
-	                    },
-	                    type: "get",
-	                    success: function(data) {
-	                        if (data == '1') {
-	                        	alert('삭제 완료 하였습니다.');
-	            				location.href="/bw/board/boardList.do";
-	                        } else {
-	                            alert('비밀번호를 확인해 주세요');
-	                        }
-			         },
-			      error : function(){
-			    	  alert("관리자에게 문의해 주세요");
-			      }
-			    }) 
-		    	}
-			})
+			$.ajax({
+				url: "/bw/board/pwCheck.do",
+				data:{
+					boardPw:$("#boardPw").val(),
+					boardNo:$("#boardNo").val()
+					},
+				type: "get",
+				success: function(data){
+					if (data == '1') {
+						if(confirm("삭제하시겠습니까?")){
+						$.ajax({
+		                    url: "/bw/board/boardDelete.do",
+		                    data: {
+		                    	boardNo: $("#boardNo").val(),
+		                    	boardPw: $("#boardPw").val()
+		                    },
+		                    type: "get",
+		                    success: function(data) {
+		                        if (data == '1') {
+		            				location.href="/bw/board/boardList.do";
+		                        }
+				         },
+				      error : function(){
+				    	  alert("관리자에게 문의해 주세요");
+				      }
+				    }) 		
+						}
+					} else{
+						alert("비밀번호를 확인해 주세요");
+					}
+				},
+				error: function(){
+					alert("관리자에게 문의해주세요")
+				}
+			});
+		})//delete click end
+			
+			
 	});
 
 </script>

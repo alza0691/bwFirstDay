@@ -20,7 +20,7 @@
     .container{
         padding: 15px;
         margin: auto;
-        width: 600px;
+        width: 1000px;
     }
     section{
         position: absolute;
@@ -65,12 +65,12 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		width: 300px;
+		width: 470px;
 		height: 20px;
 	}
 	
 	.wrapper{
-	margin: 0 auto;
+		margin: 0 auto;
 	}
 	
 	.pagingBlock>a{
@@ -132,12 +132,12 @@
 		<div class="paging">
 			<div class="textCenter">
 				<div class="pagingBlock">
-					<a href="/bw/board/boardList.do?reqPage=1">맨앞</a>
+					<a href="/bw/board/boardList.do?reqPage=1&type=${type}&keyword=${keyword}">맨앞</a>
 					${pageNavi }
-					<a href="/bw/board/boardList.do?reqPage=${totalPage }">맨뒤</a>
+					<a href="/bw/board/boardList.do?reqPage=${totalPage }&type=${type}&keyword=${keyword}">맨뒤</a>
 				</div>
 				<div>
-					<a href="/bw/board/boardList.do" style="disply: block; float: right;">리스트로</a>
+					<a href="/bw/board/boardList.do" style="disply: block; float: right;">목록으로</a>
 				</div>
 			</div>
 		</div>

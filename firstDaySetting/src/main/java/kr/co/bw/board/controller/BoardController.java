@@ -54,7 +54,6 @@ public class BoardController {
 		request.setAttribute("totalPage", data.getTotalPage());
 		request.setAttribute("totalCount", data.getTotalCount());
 		request.setAttribute("numPerPage", data.getNumPerPage());
-		System.out.println(data.getList());
 
 			return "board/boardList";
 	}	

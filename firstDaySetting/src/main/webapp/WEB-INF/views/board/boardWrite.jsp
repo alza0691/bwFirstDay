@@ -97,8 +97,7 @@
 		});
 
 		$(function(){
-			$("#boardWriter").focus();
-			$("#boardWriter").on("change keyup mousedown", function(){
+			$("#boardWriter").on("change keyup", function(){
 				var checkCount = $(this).val().length;
 				var boardWriter = $(this).val();					
 				var remain = 10-checkCount;
@@ -130,8 +129,6 @@
 					}
 				});
 					
-
-
 			$("#boardContent").on("change keyup mousedown", function(){
 				
 				var checkCount = $(this).val().length;

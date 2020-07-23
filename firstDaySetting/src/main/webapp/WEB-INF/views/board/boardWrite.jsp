@@ -57,11 +57,12 @@
 						<td>
 							<textarea name="boardContent" id="boardContent" class="autosize" cols="30" rows="20" style="width:100%; min-height:300px; resize: none;"
 							placeholder="1000자 이하로 작성하세요." required></textarea>
+							<span id="counter">0</span>/1000
 						</td>
 					</tr>
 					<tr>
 						<td class="right">비밀번호</td>
-						<td><input type="password" name="boardPw" id="boardPw" required placeholder="4자 이하로 입력해 주세요."></td>
+						<td><input type="password" name="boardPw" id="boardPw" required placeholder="숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요."></td>
 					</tr>
 				</table>
 			</form>
@@ -144,15 +145,18 @@
 		$("#boardPw").on("change keyup mousedown", function(){
 			var checkCount = $(this).val().length;
 			var boardPw = $(this).val();					
-			var remain = 4-checkCount;
+			var remain = 20-checkCount;
 			if(remain < 0){
-				alert("4글자를 초과할 수 없습니다.");
-				$("#boardPw").val(boardPw.slice(0,4));
+				alert("20글자를 초과할 수 없습니다.");
+				$("#boardPw").val(boardPw.slice(0,0));
 				return false;
 			} 
 		});
 		
 		$("#submit").click(function(){
+			console.log($("#boardPw").val());
+			var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+=]).{6,20}$/;
+			var boardPwLength = $("#boardPw").val().length;
 			if($("#boardWriter").val() == ""){
 				$("#boardWriter").focus();
 				alert("글쓴이를 입력해 주세요.");
@@ -165,9 +169,23 @@
 			} else if($("boardPw").val()==""){
 				$("#boardPw").focus();
 				alert("비밀번호를 입력해 주세요.");
+			} else if($("#boardPw").val().length < 6){ 
+				alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
+				$("#boardPw").val("").focus();
+			} else if(!regExp.test($("#boardPw").val())){
+				alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
+				$("#boardPw").val("").focus();
 			} else{
 				$("#form").submit();
 			}
-		});			
+		});	
+		
+		$(function(){
+			$("#boardContent").on("change keyup paste", function(e){
+				var content = $(this).val();
+				$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
+			    $('#counter').html(content.length);	
+			});
+		});
 	</script>
 </html>

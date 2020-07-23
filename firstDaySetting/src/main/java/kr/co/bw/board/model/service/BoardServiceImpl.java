@@ -58,9 +58,6 @@ public class BoardServiceImpl {
 		int pageNaviSize = 5;
 		int pageNo = ((reqPage -1) / pageNaviSize) * pageNaviSize +1; 						//해당 게시물의 페이지 네비게이션 첫번째 수를 조회 ((해당페이지 -1) / 페이지네비사이즈) * 페이지네비사이즈 +1
 																							//이전버튼과 다음버튼 현재페이지 처리를 위한 것
-		int pageNoCount = ((reqPage -1) / pageNaviSize) * pageNaviSize +1;					//pageNo랑 같은 것으로 for문 돌릴때에 사용할 변수
-		
-		System.out.println("pageNo1 : " + pageNo);
 		
 		pageNavi.append("<a");																//<a>이전</a>을 위한 append(계속해서 유지하기 위해서)
 		if(pageNo != 1) {																	//페이지 네비게이션의 첫번째 수가 1이 아니면
@@ -72,30 +69,26 @@ public class BoardServiceImpl {
 		}
 		pageNavi.append(">이전</a>");
 		
-		System.out.println("pageNo2 : " + pageNo);
-		
 		for (int i = 0; i < pageNaviSize; i++) {											//페이지 네비게이션 사이즈만큼 출력
-			if (pageNoCount == reqPage) {														//해당 게시물의 위치일 때  
-				pageNavi.append("<a>" + pageNoCount + "</a>");									//넘어갈 수 없이 빈값으로 처리(주소값 없이처리)
+			if (pageNo == reqPage) {														//해당 게시물의 위치일 때  
+				pageNavi.append("<a>" + pageNo + "</a>");									//넘어갈 수 없이 빈값으로 처리(주소값 없이처리)
 			} else {
-				pageNavi.append("<a href='/bw/board/boardList.do?reqPage=" + pageNoCount);		//게시물 페이지가 작거나 클 때 넘어갈 수 있도록 주소값 추가하여 처리
+				pageNavi.append("<a href='/bw/board/boardList.do?reqPage=" + pageNo);		//게시물 페이지가 작거나 클 때 넘어갈 수 있도록 주소값 추가하여 처리
 				if(type!=null) {															//검색 값이 있으면
 					pageNavi.append("&type=" + type + "&keyword=" + keyword);				//검색 조건과 키워드를 검색
 				}																			//없으면 통과
-				pageNavi.append("'>" + pageNoCount + "</a>");
+				pageNavi.append("'>" + pageNo + "</a>");
 			}	
-			pageNoCount++;
-			
-			if (pageNoCount > totalPage) {														//만약 해당게시물의 페이지네비게이션의 수가 총 페이지수보다 높을 시에는 통과
+			pageNo++;
+			if (pageNo > totalPage) {														//만약 해당게시물의 페이지네비게이션의 수가 총 페이지수보다 높을 시에는 통과
 				break;																		//break 안 할 시 추가적인 빈 네비가 생성
 			}
-			System.out.println("pageNo3 : "+pageNo);
 		}
+		pageNo--;
 		
-		pageNavi.append("<a");																//<a>다음</a>을 추가하기 위한 append(계속해서 유지하기 위해서)
-		System.out.println("pageNo4 : " + pageNo);
+		pageNavi.append("<a");
 		if (pageNo < totalPage) {															//해당게시물의 페이지가 총 페이지수보다 작을 때 
-			pageNavi.append(" href='/bw/board/boardList.do?reqPage=" + pageNoCount);				//이동할 수 있도록 처리
+			pageNavi.append(" href='/bw/board/boardList.do?reqPage=" + (pageNo+1));				//이동할 수 있도록 처리
 			if (type != null) {																//검색 조건이 있을 시
 				pageNavi.append("&type=" + type + "&keyword=" + keyword);					//검색 조건을 넣음
 			}																				//없으면 통과

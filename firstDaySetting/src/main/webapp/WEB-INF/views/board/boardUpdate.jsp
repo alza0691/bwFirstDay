@@ -52,7 +52,8 @@
 						<td class="right">내용</td>
 						<td>
 							<textarea name="boardContent" id="boardContent" class="autosize" cols="30" rows="20"  style="width:100%; min-height:300px; resize: none;"
-							placeholder="내용을 입력하세요" required>${boardVo.boardContent }</textarea>
+							placeholder="1000자 이하로 작성하세요" required>${boardVo.boardContent }</textarea>
+							<span id="counter">0</span>/1000
 						</td>
 					</tr>
 				</table>
@@ -122,7 +123,14 @@
 			$("#boardUpdate").submit();
 		}
 	});	
-
+	
+	$(function(){
+		$("#boardContent").on("change keyup paste", function(e){
+			var content = $(this).val();
+			$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
+		    $('#counter').html(content.length);	
+		});
+	});
 
 </script>
 </html>

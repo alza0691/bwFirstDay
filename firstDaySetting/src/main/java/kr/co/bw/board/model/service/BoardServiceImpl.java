@@ -26,7 +26,7 @@ public class BoardServiceImpl {
 		int numPerPage = 5;
 		//총 게시글 수
 		int totalCount = dao.selectMapperInfoCount(map);
-		System.out.println("토탈카운트: " + totalCount);
+		System.out.println("토탈카운트 = " + totalCount);
 		//총 페이지 수
 		int totalPage;
 		//총 페이지 수 연산 (추가적인 페이지를 가지고 올것인가 아닌가를 확인)
@@ -37,7 +37,7 @@ public class BoardServiceImpl {
 		}	
 		
 		//조회해 올 게시물 시작번호와 끝번호 연산
-		int start = (reqPage - 1) * numPerPage + 1;		//((요청페이지 -1) * 한페이지당 게시글)을 하여 전페이지의 마지막 게시글을 가지고 온 후 +1을 하여 요청페이지의 첫글번호를 가져옴
+		int start = (reqPage - 1) * numPerPage + 1;		//((요청페이지 -1) * 한페이지당 게시글)을 하여 전페이지의 마지막 게시글을 가지고 온 후 +1을 하여 요청페이지의 첫글번호를 가져옴 //요청페이지가 어디든 요청페이지의 첫글을 찾을 수 있음
 		int end = reqPage * numPerPage;					//(요청페이지 * 한페이지당 게시글)을 하여 요청페이지의 마지막 번호를 가져옴
 		
 		//시작번호와 끝번호를 map에 저장
@@ -46,9 +46,10 @@ public class BoardServiceImpl {
 		
 		//해당 페이지의 게시물들 조회
 		List<BoardVO> list = dao.selectMapperInfo(map);
+		
 		System.out.println("totalPage = " + totalPage);
 		System.out.println("start = " + start);
-		System.out.println("end = "+end);
+		System.out.println("end = " + end);
 		
 		
 		//페이지 네비게이션 작성 시작 (주소값 처리)
@@ -56,12 +57,12 @@ public class BoardServiceImpl {
 		
 		//페이지 네비게이션 길이
 		int pageNaviSize = 5;
-		int pageNo = ((reqPage -1) / pageNaviSize) * pageNaviSize +1; 						//해당 게시물의 페이지 네비게이션 첫번째 수를 조회 ((해당페이지 -1) / 페이지네비사이즈) * 페이지네비사이즈 +1
+		int pageNo = ((reqPage -1) / pageNaviSize) * pageNaviSize + 1; 						//해당 게시물의 페이지 네비게이션 첫번째 수를 조회 ((해당페이지 -1) / 페이지네비사이즈) * 페이지네비사이즈 +1
 																							//이전버튼과 다음버튼 현재페이지 처리를 위한 것
 		
 		pageNavi.append("<a");																//<a>이전</a>을 위한 append(계속해서 유지하기 위해서)
 		if(pageNo != 1) {																	//페이지 네비게이션의 첫번째 수가 1이 아니면
-			pageNavi.append(" href='/bw/board/boardList.do?reqPage="+(pageNo-1));				//이전으로 이동할 수 있게끔 하고
+			pageNavi.append(" href='/bw/board/boardList.do?reqPage="+(pageNo-1));			//이전으로 이동할 수 있게끔 하고
 			if(type!=null) {																//검색 값이 있으면
 				pageNavi.append("&type=" + type + "&keyword=" + keyword);					//검색 조건과 키워드를 검색
 			}																				//없으면 통과
@@ -84,11 +85,11 @@ public class BoardServiceImpl {
 				break;																		//break 안 할 시 추가적인 빈 네비가 생성
 			}
 		}
-		pageNo--;
+		pageNo--;																			//break하기 전에 +1이 되기때문에 -1을 해줌
 		
 		pageNavi.append("<a");
 		if (pageNo < totalPage) {															//해당게시물의 페이지가 총 페이지수보다 작을 때 
-			pageNavi.append(" href='/bw/board/boardList.do?reqPage=" + (pageNo+1));				//이동할 수 있도록 처리
+			pageNavi.append(" href='/bw/board/boardList.do?reqPage=" + (pageNo+1));			//이동할 수 있도록 처리 (+1을 안해주면 페이지가 하나 더 나옴)
 			if (type != null) {																//검색 조건이 있을 시
 				pageNavi.append("&type=" + type + "&keyword=" + keyword);					//검색 조건을 넣음
 			}																				//없으면 통과

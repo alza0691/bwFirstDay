@@ -28,13 +28,13 @@ public class BoardVO {
 
 
 	public String getBoardTitle2() {
-		return boardTitle.replaceAll("<","&lt;").replaceAll(">","&gt;");
+		return boardTitle.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
 	}
 	public String getBoardContent2() {
-		return boardContent.replaceAll("<","&lt;").replaceAll(">","&gt;");
+		return boardContent.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
 	}
 	public String getBoardWriter2() {
-		return boardWriter.replaceAll("<","&lt;").replaceAll(">","&gt;");
+		return boardWriter.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
 	}
 	
 	public BoardVO() {

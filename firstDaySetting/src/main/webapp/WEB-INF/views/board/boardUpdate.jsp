@@ -52,8 +52,8 @@
 						<td class="right">내용</td>
 						<td>
 							<textarea name="boardContent" id="boardContent" class="autosize" cols="30" rows="20"  style="width:100%; min-height:300px; resize: none;"
-							placeholder="1000자 이하로 작성하세요" required>${boardVo.boardContent }</textarea>
-							<span id="counter">0</span>/1000
+							placeholder="1000자 이하로 작성하세요" required>${boardVo.boardContent2 }</textarea>
+							<span id="counter"></span>/1000
 						</td>
 					</tr>
 				</table>
@@ -71,6 +71,10 @@
 		var autosize = $(".autosize"); 
 		var size = autosize.prop('scrollHeight');
 		autosize.css("height",size);
+		
+		var content = $("#boardContent").val();
+		$("#boardContent").height(((content.split('\n').length + 1) * 1.5) + 'em');
+	    $('#counter').html(content.length);	
 	});
 
 	$(function(){
@@ -83,22 +87,22 @@
 		});
 	
 		$(function(){			
-			$("#boardTitle").on("change keyup mousedown", function(){
-				if($("#boardTitle").val().length != ""){
+			$("#boardWriter").on("change keyup mousedown", function(){
+				if($("#boardWriter").val().length != ""){
 					var checkCount = $(this).val().length;
-					var boardTitle = $(this).val();					
-					var remain = 40-checkCount;
+					var boardWriter = $(this).val();					
+					var remain = 10-checkCount;
 					if(remain < 0){
-						alert("40글자를 초과할 수 없습니다.");
-						$("#boardTitle").val(boardTitle.slice(0,40));
+						alert("10를 초과할 수 없습니다.");
+						$("#boardWriter").val(boardWriter.slice(0,10));
 						return false;
-					} else if ($.trim($("#boardTitle").val())==""){
-							alert("빈칸을 입력할 수 없습니다.")
-							$("#boardTitle").val(boardTitle.slice(0,0));
-							return false;
-						}
+					} else if($.trim($("#boardWriter").val())==""){
+						alert("빈칸을 입력할 수 없습니다.")
+						$("#boardWriter").val(boardWriter.slice(0,0));
+						return false;
 					}
-				});
+				}
+			});
 			
 		$("#boardContent").on("change keyup down", function(){
 			var checkCount = $(this).val().length;

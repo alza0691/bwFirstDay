@@ -116,7 +116,7 @@
 		var size = autosize.prop('scrollHeight');
 		autosize.css("height",size);
 	});
-
+var boardPw = $("#boardPw");
 	$(function(){
 		$(".update").click(function(){
 			$.ajax({
@@ -131,6 +131,7 @@
                         location.href="/bw/board/boardUpdateFrm.do?boardNo="+${oneContent.boardNo};
                     } else {
                         alert('비밀번호를 확인해 주세요');
+                        $("#boardPw").val("").focus();
                     }
 				},
 				error: function(){

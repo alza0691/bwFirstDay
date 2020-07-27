@@ -98,18 +98,20 @@
 		});
 
 		$(function(){
-			$("#boardWriter").on("change keyup", function(){
-				var checkCount = $(this).val().length;
-				var boardWriter = $(this).val();					
-				var remain = 10-checkCount;
-				if ($.trim($("#boardWriter").val())==""){
-					alert("빈칸을 입력할 수 없습니다.")
-					$("#boardWriter").val(boardWriter.slice(0,0));
-					return false;
-				} else if(remain < 0){
-					alert("10를 초과할 수 없습니다.");
-					$("#boardWriter").val(boardWriter.slice(0,10));
-					return false;
+			$("#boardWriter").on("change keyup mousedown", function(){
+				if($("#boardWriter").val().length != ""){
+					var checkCount = $(this).val().length;
+					var boardWriter = $(this).val();					
+					var remain = 10-checkCount;
+					if(remain < 0){
+						alert("10를 초과할 수 없습니다.");
+						$("#boardWriter").val(boardWriter.slice(0,10));
+						return false;
+					} else if($.trim($("#boardWriter").val())==""){
+						alert("빈칸을 입력할 수 없습니다.")
+						$("#boardWriter").val(boardWriter.slice(0,0));
+						return false;
+					}
 				}
 			});
 
@@ -126,9 +128,9 @@
 							alert("빈칸을 입력할 수 없습니다.")
 							$("#boardTitle").val(boardTitle.slice(0,0));
 							return false;
-						}
 					}
-				});
+				}
+			});
 					
 			$("#boardContent").on("change keyup mousedown", function(){
 				

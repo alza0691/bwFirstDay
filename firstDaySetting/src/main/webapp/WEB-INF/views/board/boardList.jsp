@@ -100,6 +100,7 @@
 	                	<td>${list.boardWriter2 }</td>
 	                	<td>${list.boardDate }</td>
 	                </tr>
+	                
 	                <c:set var="num" value="${num-1 }"></c:set>
 	            </c:forEach>
 			</table>

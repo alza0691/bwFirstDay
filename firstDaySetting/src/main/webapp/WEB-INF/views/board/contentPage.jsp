@@ -103,6 +103,7 @@
 				<button type="button" class="update">수정</button>
 				<button type="button" class="delete">삭제</button>
 				<button type="button" class="return">목록으로</button>
+				<button type="button" class="reply">답글달기</button>
 				<br><br><br>
 			</form>
 		</div>
@@ -116,7 +117,7 @@
 		var size = autosize.prop('scrollHeight');
 		autosize.css("height",size);
 	});
-var boardPw = $("#boardPw");
+	var boardPw = $("#boardPw");
 	$(function(){
 		$(".update").click(function(){
 			$.ajax({
@@ -182,6 +183,9 @@ var boardPw = $("#boardPw");
 			});
 		})//delete click end
 			
+		$(".reply").click(function(){
+			location.href="/bw/board/replyWriteFrm.do";
+		});
 			
 	});
 

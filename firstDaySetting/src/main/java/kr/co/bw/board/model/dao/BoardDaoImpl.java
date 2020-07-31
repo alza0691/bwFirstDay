@@ -7,6 +7,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import kr.co.bw.board.model.vo.BoardCommentVO;
+import kr.co.bw.board.model.vo.BoardReplyVO;
 import kr.co.bw.board.model.vo.BoardVO;
 
 
@@ -56,6 +58,31 @@ public class BoardDaoImpl {
 	public BoardVO pwCheck(BoardVO boardVo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("board.pwCheck",boardVo);
+	}
+	
+	public int boardCommentInsert(BoardCommentVO comment) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("board.boardCommentInsert",comment);
+	}
+
+	public BoardVO selectOneBoard(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.oneContent", boardNo);
+	}
+
+	public List<BoardCommentVO> selectCommentList(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.selectCommentList", boardNo);
+	}
+
+	public int replyInsert(BoardReplyVO replyVo) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("board.replyInsert",replyVo);
+	}
+
+	public BoardCommentVO boardOneComment(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.boardOneComment", boardNo);
 	}
 	
 }

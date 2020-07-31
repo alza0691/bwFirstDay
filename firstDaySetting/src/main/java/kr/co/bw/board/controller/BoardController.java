@@ -19,9 +19,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 import kr.co.bw.board.model.service.BoardServiceImpl;
+import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
+import kr.co.bw.board.model.vo.BoardReplyVO;
 import kr.co.bw.board.model.vo.BoardVO;
+import kr.co.bw.board.model.vo.BoardViewData;
 
 @Controller
 @RequestMapping("/bw/board")
@@ -55,15 +60,15 @@ public class BoardController {
 		request.setAttribute("totalCount", data.getTotalCount());
 		request.setAttribute("numPerPage", data.getNumPerPage());
 
-			return "board/boardList";
+		return "board/boardList";
 	}	
 	
 	@RequestMapping("/contentPage.do")
 	public String contentPage(Model model, int boardNo) {
-		BoardVO oneContent = service.oneContent(boardNo);
-		System.out.println(oneContent);
-		System.out.println(oneContent.getBoardNo());
-		model.addAttribute("oneContent", oneContent);
+		BoardViewData data = service.boardCommentList(boardNo);
+		model.addAttribute("b", data.getB());
+		model.addAttribute("commentList", data.getCommentList());
+		
 		return "board/contentPage";
 	}
 	
@@ -131,5 +136,54 @@ public class BoardController {
 			return "0";
 		}
 	}
-
+	
+	@ResponseBody
+	@RequestMapping(value="boardCommentInsert.do", produces = "text/html; charset=utf-8")
+	public String boardCommentInsert(BoardCommentVO comment) {
+		int result = service.boardCommentInsert(comment);
+		if (result == 1) {
+			System.out.println("코멘트 입력 완료");
+			return "1";
+		} else{
+			System.out.println("코멘트 입력 실패");
+			return "0";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="selectOneComment.do", produces = "application/json; charset=utf-8")
+	public BoardCommentVO selectOneComment(int boardNo) {
+		BoardCommentVO boardComment = service.boardOneComment(boardNo);
+		return boardComment;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="boardCommentList.do", produces = "application/json; charset=utf-8")
+	public String boardCommentList(HttpServletRequest request, int boardNo) {
+		BoardViewData data = service.boardCommentList(boardNo);
+		request.setAttribute("b", data.getB());
+		request.setAttribute("commentList", data.getCommentList());
+		return new Gson().toJson(data.getCommentList());
+	}
+	
+	@RequestMapping("/replyWriteFrm.do")
+	public String replyWriteFrm(Model model, int boardNo) {
+		model.addAttribute("boardNo", boardNo);
+		return "board/replyWrite";
+	}
+	
+	@RequestMapping("/replyWrite.do")
+	public String replyWrite(BoardReplyVO replyVo) {
+		System.out.println(replyVo.getBoardReplyWriter());
+		int result = service.replyInsert(replyVo);
+		if (result == 1) {
+			System.out.println("글쓰기 성공");
+		} else {
+			System.out.println("글쓰기 실패");
+		}
+		return "redirect:/bw/board/boardList.do";
+	}
+//	public String replyWrite(BoardReplyVO replyVo) {
+////		int boardReplyRef = replyVo.getBoardReplyRef() != 0 ? replyVo.getBoardReplyRef() : null;
+////		replyVo.setBoardReplyRef(boardReplyRef);
 }

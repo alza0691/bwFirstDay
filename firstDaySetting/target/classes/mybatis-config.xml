@@ -6,5 +6,7 @@
 	</settings>
 	<typeAliases>
 		<typeAlias type="kr.co.bw.board.model.vo.BoardVO" alias="board"/>
+		<typeAlias type="kr.co.bw.board.model.vo.BoardReplyVO" alias="replyVo"/>
+		<typeAlias type="kr.co.bw.board.model.vo.BoardCommentVO" alias="comment"/>
 	</typeAliases>
 </configuration>

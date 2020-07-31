@@ -82,8 +82,49 @@
 		from board
 		where board_no=#{boardNo} and board_pw=#{boardPw}
 	</select>
-	<select id="boardCheck" resultType="board" parameterType="board">
-		select 
+		<insert id="boardCommentInsert" parameterType="comment">
+		insert into board_comment values(
+			seq_board_comment.nextval
+			, #{boardCommentLevel}
+			, #{boardCommentWriter}
+			, #{boardCommentContent}
+			, #{boardRef}
+			, #{boardCommentRef}
+			, sysdate
+		)
+	</insert>
+	<select id="selectCommentList" parameterType="_int" resultType="comment">
+		select
+			board_comment_no as boardCommentNo
+			, board_comment_level as boardCommentLevel
+			, board_comment_writer as boardCommentWriter
+			, board_comment_content as boardCommentContent
+			, board_ref as boardRef
+			, board_comment_date as boardCommentDate
+		from board_comment where board_ref = #{boardNo} order by board_comment_no
+	</select>
+	<insert id="replyInsert" parameterType="replyVo">
+		insert into board_reply values(
+			seq_board_reply.nextval
+			, #{boardReplyLevel}
+			, #{boardReplyWriter}
+			, #{boardReplyContent}
+			, #{boardRef}
+			, #{boardReplyRef}
+			, sysdate
+			, #{boardReplyPw}
+			)
+	</insert>
+	<select id="boardOneComment" parameterType="_int" resultType="comment">
+		select rownum as rnum, b.* 
+			from(select
+					board_comment_no as boardCommentNo
+					, board_comment_level as boardCommentLevel
+					, board_comment_writer as boardCommentWriter
+					, board_comment_content as boardCommentContent
+					, board_ref as boardRef
+					, board_comment_date as boardCommentDate
+				from board_comment where board_ref = #{boardNo} order by board_comment_no desc)b where rownum = 1
 	</select>
   
 </mapper>

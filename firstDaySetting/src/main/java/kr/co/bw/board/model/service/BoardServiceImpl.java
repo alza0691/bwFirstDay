@@ -1,5 +1,6 @@
 package kr.co.bw.board.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,8 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.co.bw.board.model.dao.BoardDaoImpl;
+import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
+import kr.co.bw.board.model.vo.BoardReplyVO;
 import kr.co.bw.board.model.vo.BoardVO;
+import kr.co.bw.board.model.vo.BoardViewData;
 
 @Service("boardService")
 public class BoardServiceImpl {
@@ -135,6 +139,32 @@ public class BoardServiceImpl {
 	public BoardVO pwCheck(BoardVO boardVo) {
 		// TODO Auto-generated method stub
 		return dao.pwCheck(boardVo);
+	}
+	
+	public int boardCommentInsert(BoardCommentVO comment) {
+		// TODO Auto-generated method stub
+		return dao.boardCommentInsert(comment);
+	}
+
+	public BoardViewData boardCommentList(int boardNo) {
+		BoardVO selectBoard = dao.selectOneBoard(boardNo);
+		List<BoardCommentVO> selectCommentList = dao.selectCommentList(boardNo);		
+		
+		BoardViewData data = new BoardViewData();
+		data.setB(selectBoard);
+		data.setCommentList(selectCommentList);
+		
+		return data;
+	}
+
+	public int replyInsert(BoardReplyVO replyVo) {
+		// TODO Auto-generated method stub
+		return dao.replyInsert(replyVo);
+	}
+
+	public BoardCommentVO boardOneComment(int boardNo) {
+		// TODO Auto-generated method stub
+		return dao.boardOneComment(boardNo);
 	}
 	
 }

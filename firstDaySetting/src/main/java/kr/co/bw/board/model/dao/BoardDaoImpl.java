@@ -84,5 +84,15 @@ public class BoardDaoImpl {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("board.boardOneComment", boardNo);
 	}
+
+	public int commentPwCheck(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.commentPwCheck", bcv);
+	}
+
+	public int deleteComment(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.deleteComment", bcv);
+	}
 	
 }

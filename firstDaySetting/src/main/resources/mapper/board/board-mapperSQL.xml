@@ -91,6 +91,7 @@
 			, #{boardRef}
 			, #{boardCommentRef}
 			, sysdate
+			, #{boardCommentPw}
 		)
 	</insert>
 	<select id="selectCommentList" parameterType="_int" resultType="comment">
@@ -126,5 +127,15 @@
 					, board_comment_date as boardCommentDate
 				from board_comment where board_ref = #{boardNo} order by board_comment_no desc)b where rownum = 1
 	</select>
+	<select id="commentPwCheck" parameterType="comment">
+		select
+			board_comment_no as boardCommentNo
+			, board_comment_pw as boardCommentPw
+		from board_comment
+		where board_comment_no=#{boardCommentNo} and board_comment_pw=#{boardCommentPw}
+	</select>
+	<delete id="deleteComment" parameterType="comment">
+		delete from board_comment where board_comment_no = #{boardCommentNo} and board_comment_pw = #{boardCommentPw}
+	</delete>
   
 </mapper>

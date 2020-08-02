@@ -166,5 +166,15 @@ public class BoardServiceImpl {
 		// TODO Auto-generated method stub
 		return dao.boardOneComment(boardNo);
 	}
+
+	public int commentPwCheck(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return dao.commentPwCheck(bcv);
+	}
+
+	public int deleteComment(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return dao.deleteComment(bcv);
+	}
 	
 }

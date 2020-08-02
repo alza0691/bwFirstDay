@@ -140,6 +140,8 @@ public class BoardController {
 	@ResponseBody
 	@RequestMapping(value="boardCommentInsert.do", produces = "text/html; charset=utf-8")
 	public String boardCommentInsert(BoardCommentVO comment) {
+		System.out.println(comment.getBoardCommentPw());
+		System.out.println(comment.getBoardCommentContent());
 		int result = service.boardCommentInsert(comment);
 		if (result == 1) {
 			System.out.println("코멘트 입력 완료");
@@ -182,6 +184,28 @@ public class BoardController {
 			System.out.println("글쓰기 실패");
 		}
 		return "redirect:/bw/board/boardList.do";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/commentPwCheck.do")
+	public String commentPwCheck(BoardCommentVO bcv) {
+		int pwCheck = service.commentPwCheck(bcv);
+		if(pwCheck == 1) {
+			return "1";
+		} else {
+			return "0";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/deleteComment.do")
+	public String deleteComment(BoardCommentVO bcv) {
+		int result = service.deleteComment(bcv);
+		if(result == 1) {
+			return "1";
+		} else {
+			return "0";
+		}
 	}
 //	public String replyWrite(BoardReplyVO replyVo) {
 ////		int boardReplyRef = replyVo.getBoardReplyRef() != 0 ? replyVo.getBoardReplyRef() : null;

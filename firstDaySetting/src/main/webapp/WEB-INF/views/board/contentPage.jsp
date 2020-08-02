@@ -33,9 +33,7 @@
     h1, .textCenter{
     	text-align: center;
     }
-    span{
-    	float:right;
-    }
+
     .table-wrapper, .comment-write, .comment-wrapper {
         width: 600px;
         margin: 0 auto;
@@ -59,7 +57,6 @@
     }
         
     .commentList>li {
-     	float: left;
      	color: black;
      	text-decoration: none;
     }  
@@ -109,7 +106,7 @@
 				<button type="button" class="delete">삭제</button>
 				<button type="button" class="return">목록으로</button>
 				<button type="button" class="reply">답글달기</button>
-				<br><br><br>
+				<br>
 			</form>
 		</div>
 		
@@ -121,33 +118,39 @@
                     <input type="hidden" name="boardCommentRef" id="boardCommentRef" value="0">
                     <table class="table">
                         <tr>
-                        	<td width="20%">
-                        		<input type="text" name="boardCommentWriter" id="boardCommentWriter" placeholder="작성자를 입력해 주세요">
+                        	<td>
+                        		<input type="text" name="boardCommentWriter" id="boardCommentWriter" placeholder="작성자를 입력해 주세요" style="width: 100%;">
                         	</td>
-                            <td width="70%">
-                                <textarea class="form-control" style="width: 100%;"name="boardCommentContent" id="boardCommentContent" placeholder="댓글은 내 얼굴입니다."></textarea>
+                        	<td>
+                            	<input type="password" placeholder="비밀번호를 입력해 주세요" name="boardCommentPw" id="boardCommentPw" style="width: 100%;">
+                        	</td>
+                        </tr>
+                        <tr>
+                        	<td width="70%" colspan="2">
+                                <textarea class="form-control" style="width: 100%;" name="boardCommentContent" id="boardCommentContent" placeholder="댓글은 내 얼굴입니다."></textarea>
                             </td>
-                            <td width="10%">
-                            	<input type="password" placeholder="비밀번호를 입려하세요">
-                                <button type="button" class="btn btn-primary" id="commentBtn">댓글 작성</button>
-                            </td>
+                        </tr>
+                        <tr>
+                        	<td colspan="2">
+                               <button type="button" class="btn btn-primary" id="commentBtn">댓글 작성</button>
+                        	</td>
                         </tr>
                     </table>
                 </form>
             </div>
-            <div class="test commentList" style="float:left;"></div>
             
 		<div class="comment-wrapper">
             <c:forEach items="${commentList }" var="bc">
 	                <ul class="commentList">
-	                    <li style="width: 10%; text-align: center;"><span>${bc.boardCommentWriter }</span></li>
-	                    <li style="width: 65%; margin-left: 50px;">
-	                    	<span style="float: left;">${bc.boardCommentContent }</span>
-	                    	<textarea class="form-control" name="boardCommentContent" style="display: none;">${bc.boardCommentContent }</textarea></li>
-	                    <li style="width: 10%"><span>${bc.boardCommentDate }</span></li>
-	                    <li style="width: 15%; text-align: center">
-	                                <a href="javascript:void(0)" onclick="modifyComment(this, '${bc.boardCommentNo}', '${bc.boardRef }')">수정</a>
-	                                <a href="javascript:void(0)" onclick="deleteComment('${bc.boardCommentNo }', '${bc.boardRef }')">삭제</a>
+	                    <li><span>${bc.boardCommentWriter }</span></li>
+	                    <li><span>${bc.boardCommentDate }</span></li>
+	                    <li>
+	                    	<span>${bc.boardCommentContent }</span>
+	                    	<textarea class="form-control" name="boardCommentContent" style="display: none;">${bc.boardCommentContent }</textarea>
+	                    </li>
+	                    <li>
+	                    	<a href="javascript:void(0)" onclick="modifyComment(this, '${bc.boardCommentNo}', '${bc.boardRef }')">수정</a>
+	                    	<a href="javascript:void(0)" onclick="deleteComment('${bc.boardCommentNo }', '${bc.boardRef }')">삭제</a>
 	                    </li>
 	                </ul>
             </c:forEach>
@@ -238,6 +241,7 @@
 						, boardCommentLevel:$("#boardCommentLevel").val()
 						, boardCommentRef:$("#boardCommentRef").val()
 						, boardCommentContent:$("#boardCommentContent").val()
+						, boardCommentPw:$("#boardCommentPw").val()
 					},
 				type: "get",
 				success: function(data){
@@ -255,10 +259,13 @@
 							success: function(data){
 									console.log("코멘트 불러오기 성공");
 									var html = "";
-										html += "<ul><li>" + data.boardCommentDate + "</li>";
-										html += "<li>" + data.boardCommentWriter + "</li>";
-										html += "<ul><li>" + data.boardCommentContent + "</li></ul>";
-									$(".test").append(html);
+										html += "<ul class='commentList'><li><span>" + data.boardCommentWriter + "</span></li>";
+										html += "<li><span>" + data.boardCommentDate + "</span></li>";
+										html += "<li><span>" + data.boardCommentContent + "</span>";
+										html += "<textarea class='form-control' name='boardCommentContent' style='display: none;'>" + data.boardCommentContent + "</textarea></li>"
+										html += "<li><a href='javascript:void(0)' onclick='modifyComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)'>수정</a>";
+										html += "<a href='javascript:void(0)' onclick='deleteComment(&#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)'>삭제</a></li>";
+									$(".comment-wrapper").append(html);			
 							},
 							error: function(){
 								console.log("댓글 불러오기 ajax통신 실패"); 
@@ -280,6 +287,42 @@
 			location.href="/bw/board/replyWriteFrm.do?boardNo="+${b.boardNo };
 		});
 	});
+	
+    function deleteComment(boardCommentNo, boardRef) {
+    	$.ajax({
+    		url: "/bw/board/commentPwCheck.do",
+    		data: {
+    				boardCommentPw : $("#boardCommentPw").val()
+    				, boardCommentNo : $("#boardCommentNo").val()
+    			}
+    		type: "get",
+    		success: function(data){
+    			if (data == '1') {
+    				if(confirm("삭제하시겠습니까?")){
+    					$.ajax({
+    						url: "/bw/board/deleteComment.do",
+    			    		data: {
+    			    				boardCommentPw : $("#boardCommentPw").val()
+    			    				, boardCommentNo : $("#boardCommentNo").val()
+    			    			}
+    			    		type: "get",
+    			    		success(data){
+    			    			if(data == '1'){
+    			    				console.log("삭제완료");
+    			    			}
+    			    		}
+    					});
+    					
+    				}
+                } else{
+                	alert("비밀번호를 확인해 주세요.");
+                }
+    		},
+    		error: function(){
+    			alert("관리자에게 문의해 주세요");
+    		}
+    	});
+    }
 
 </script>
 </html>

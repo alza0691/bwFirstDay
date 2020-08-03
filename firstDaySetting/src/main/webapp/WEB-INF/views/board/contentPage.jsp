@@ -68,7 +68,11 @@
     	list-style: none;
     	border: 1px solid #ccc;
     }
-
+    .commentPw, .commentPwButton{
+    	display: none;
+    	float: left;
+    }
+    
 </style>
 <body>
 	<section>
@@ -149,8 +153,10 @@
 	                    	<textarea class="form-control" name="boardCommentContent" style="display: none;">${bc.boardCommentContent }</textarea>
 	                    </li>
 	                    <li>
-	                    	<a href="javascript:void(0)" onclick="modifyComment(this, '${bc.boardCommentNo}', '${bc.boardRef }')">수정</a>
-	                    	<a href="javascript:void(0)" onclick="deleteComment('${bc.boardCommentNo }', '${bc.boardRef }')">삭제</a>
+	                    	<a href="javascript:void(0)" onclick="modifyComment(this, '${bc.boardCommentNo}', '${bc.boardRef }')" class="left">수정</a>
+	                    	<a href="javascript:void(0)" onclick="deleteComment(this, '${bc.boardCommentNo }', '${bc.boardRef }')" class="left">삭제</a>
+	                    	<input type="password" class="commentPw" name="commentPw" placeholder="비밀번호를 입력하세요">
+	                    	<input type="button" class="commentPwButton" name="commentPwButton" value="입력">
 	                    </li>
 	                </ul>
             </c:forEach>
@@ -288,13 +294,16 @@
 		});
 	});
 	
-    function deleteComment(boardCommentNo, boardRef) {
-    	$.ajax({
+    function deleteComment(obj, boardCommentNo, boardRef) {
+    	$(obj).next().attr("style", "display: block;");
+    	$(obj).next().next().attr("style", "display: block;");
+    	$(obj).next().next().click(function(){
+        	$.ajax({
     		url: "/bw/board/commentPwCheck.do",
     		data: {
-    				boardCommentPw : $("#boardCommentPw").val()
-    				, boardCommentNo : $("#boardCommentNo").val()
-    			}
+    				boardCommentPw : $(obj).next().next().val()
+    				, boardCommentNo : boardRef
+    			},
     		type: "get",
     		success: function(data){
     			if (data == '1') {
@@ -302,17 +311,16 @@
     					$.ajax({
     						url: "/bw/board/deleteComment.do",
     			    		data: {
-    			    				boardCommentPw : $("#boardCommentPw").val()
-    			    				, boardCommentNo : $("#boardCommentNo").val()
-    			    			}
+	    			    			boardCommentPw : $(obj).next().next().val()
+	    		    				, boardCommentNo : boardRef
+    			    			},
     			    		type: "get",
-    			    		success(data){
+    			    		success:function(data){
     			    			if(data == '1'){
     			    				console.log("삭제완료");
     			    			}
     			    		}
     					});
-    					
     				}
                 } else{
                 	alert("비밀번호를 확인해 주세요.");
@@ -322,6 +330,11 @@
     			alert("관리자에게 문의해 주세요");
     		}
     	});
+      });
+    }
+    
+    function modifyComment(obj, boardCommentNo, boardRef) {
+    	console.log($(obj));
     }
 
 </script>

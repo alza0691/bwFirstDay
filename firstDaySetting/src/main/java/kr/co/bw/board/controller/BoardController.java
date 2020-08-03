@@ -188,7 +188,7 @@ public class BoardController {
 	
 	@ResponseBody
 	@RequestMapping("/commentPwCheck.do")
-	public String commentPwCheck(BoardCommentVO bcv) {
+	public String commentPwCheck(BoardCommentVO  bcv) {
 		int pwCheck = service.commentPwCheck(bcv);
 		if(pwCheck == 1) {
 			return "1";

@@ -301,8 +301,8 @@
         	$.ajax({
     		url: "/bw/board/commentPwCheck.do",
     		data: {
-    				boardCommentPw : $(obj).next().next().val()
-    				, boardCommentNo : boardRef
+    				boardCommentPw : $(obj).next().val()
+    				, boardCommentNo : boardCommentNo
     			},
     		type: "get",
     		success: function(data){
@@ -311,13 +311,14 @@
     					$.ajax({
     						url: "/bw/board/deleteComment.do",
     			    		data: {
-	    			    			boardCommentPw : $(obj).next().next().val()
-	    		    				, boardCommentNo : boardRef
+	    			    			boardCommentPw : $(obj).next().val()
+	    		    				, boardCommentNo : boardCommentNo
     			    			},
     			    		type: "get",
     			    		success:function(data){
     			    			if(data == '1'){
     			    				console.log("삭제완료");
+    			    				location.reload();
     			    			}
     			    		}
     					});
@@ -334,7 +335,51 @@
     }
     
     function modifyComment(obj, boardCommentNo, boardRef) {
-    	console.log($(obj));
+    	$(obj).next().next().attr("style", "display: block;");
+    	$(obj).next().next().next().attr("style", "display: block;");
+    	$(obj).next().next().next().click(function(){
+        	$.ajax({
+    		url: "/bw/board/commentPwCheck.do",
+    		data: {
+    				boardCommentPw : $(obj).next().next().val()
+    				, boardCommentNo : boardCommentNo
+    			},
+    		type: "get",
+    		success: function(data){
+    			if (data == '1') {
+    				
+    				
+    	        	var $form=$("<form action='/bw/board/modifyComment.do' method='post'></form>");
+    	        	$form.append($("<input type='hidden' name='boardCommentNo' value='" + boardCommentNo + "'>"));
+    	            $form.append($("<input type='hidden' name='boardRef' value='" + boardRef + "'>"));
+    	            $form.append($(obj).parent().parent().find("textarea"));
+    	            
+    	            $(obj).parent().prev().children().append($form);
+				
+//     					$.ajax({
+//     						url: "/bw/board/deleteComment.do",
+//     			    		data: {
+// 	    			    			boardCommentPw : $(obj).next().val()
+// 	    		    				, boardCommentNo : boardCommentNo
+//     			    			},
+//     			    		type: "get",
+//     			    		success:function(data){
+//     			    			if(data == '1'){
+//     			    				console.log("삭제완료");
+//     			    				location.reload();
+//     			    			}
+//     			    		}
+//     					});
+    				
+                } else{
+                	alert("비밀번호를 확인해 주세요.");
+                }
+    		},
+    		error: function(){
+    			alert("관리자에게 문의해 주세요");
+    		}
+    	});
+      });
     }
 
 </script>

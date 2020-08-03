@@ -1,6 +1,5 @@
 package kr.co.bw.board.model.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -167,7 +166,7 @@ public class BoardServiceImpl {
 		return dao.boardOneComment(boardNo);
 	}
 
-	public int commentPwCheck(BoardCommentVO bcv) {
+	public BoardCommentVO commentPwCheck(BoardCommentVO bcv) {
 		// TODO Auto-generated method stub
 		return dao.commentPwCheck(bcv);
 	}
@@ -175,6 +174,11 @@ public class BoardServiceImpl {
 	public int deleteComment(BoardCommentVO bcv) {
 		// TODO Auto-generated method stub
 		return dao.deleteComment(bcv);
+	}
+
+	public int modifyComment(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return dao.modifyComment(bcv);
 	}
 	
 }

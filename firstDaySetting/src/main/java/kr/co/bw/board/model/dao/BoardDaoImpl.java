@@ -85,14 +85,19 @@ public class BoardDaoImpl {
 		return sqlSession.selectOne("board.boardOneComment", boardNo);
 	}
 
-	public int commentPwCheck(BoardCommentVO bcv) {
+	public BoardCommentVO commentPwCheck(BoardCommentVO bcv) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("board.commentPwCheck", bcv);
 	}
 
 	public int deleteComment(BoardCommentVO bcv) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectOne("board.deleteComment", bcv);
+		return sqlSession.delete("board.deleteComment", bcv);
+	}
+
+	public int modifyComment(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("board.modifyComment", bcv);
 	}
 	
 }

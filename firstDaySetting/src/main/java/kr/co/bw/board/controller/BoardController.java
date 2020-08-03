@@ -1,21 +1,11 @@
 package kr.co.bw.board.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -189,8 +179,10 @@ public class BoardController {
 	@ResponseBody
 	@RequestMapping("/commentPwCheck.do")
 	public String commentPwCheck(BoardCommentVO  bcv) {
-		int pwCheck = service.commentPwCheck(bcv);
-		if(pwCheck == 1) {
+		System.out.println(bcv.getBoardCommentNo() + "," + bcv.getBoardCommentPw());
+		BoardCommentVO result = service.commentPwCheck(bcv);
+		System.out.println(result);
+		if(result != null) {
 			return "1";
 		} else {
 			return "0";
@@ -207,6 +199,18 @@ public class BoardController {
 			return "0";
 		}
 	}
+	
+	@ResponseBody
+	@RequestMapping("/modifyComment.do")
+	public String modifyComment(BoardCommentVO bcv) {
+		int result = service.modifyComment(bcv);
+		if(result == 1) {
+			return "1";
+		} else {
+			return "0";
+		}
+	}
+	
 //	public String replyWrite(BoardReplyVO replyVo) {
 ////		int boardReplyRef = replyVo.getBoardReplyRef() != 0 ? replyVo.getBoardReplyRef() : null;
 ////		replyVo.setBoardReplyRef(boardReplyRef);

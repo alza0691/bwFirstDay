@@ -127,7 +127,7 @@
 					, board_comment_date as boardCommentDate
 				from board_comment where board_ref = #{boardNo} order by board_comment_no desc)b where rownum = 1
 	</select>
-	<select id="commentPwCheck" parameterType="comment">
+	<select id="commentPwCheck" parameterType="comment" resultType="comment">
 		select
 			board_comment_no as boardCommentNo
 			, board_comment_pw as boardCommentPw
@@ -137,5 +137,10 @@
 	<delete id="deleteComment" parameterType="comment">
 		delete from board_comment where board_comment_no = #{boardCommentNo} and board_comment_pw = #{boardCommentPw}
 	</delete>
-  
+  	<update id="modifyComment" parameterType="comment">
+  		update board_comment
+		set
+			board_comment_content = #{boardCommentContent}
+		where board_comment_no = #{boardCommentNo}
+  	</update>
 </mapper>

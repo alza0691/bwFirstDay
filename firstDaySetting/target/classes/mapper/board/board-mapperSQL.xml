@@ -10,7 +10,8 @@
 					board_title as boardTitle,
 					board_content as boardContent,
 					board_writer as boardWriter,
-					board_date as boardDate
+					board_date as boardDate,
+					(select count(*) from board_comment where board_ref = board_no) as commentCount
 				from board 
 					<if test="type!=null">
 						<if test="type.equals('boardTitle')"> 
@@ -104,16 +105,16 @@
 			, board_comment_date as boardCommentDate
 		from board_comment where board_ref = #{boardNo} order by board_comment_no
 	</select>
-	<insert id="replyInsert" parameterType="replyVo">
-		insert into board_reply values(
-			seq_board_reply.nextval
-			, #{boardReplyLevel}
-			, #{boardReplyWriter}
-			, #{boardReplyContent}
-			, #{boardRef}
-			, #{boardReplyRef}
+	<insert id="replyInsert" parameterType="board">
+		insert into board values(
+			board_seq.nextval
+			, #{boardTitle}
+			, #{boardContent}
+			, #{boardWriter}
 			, sysdate
-			, #{boardReplyPw}
+			, #{boardPw}
+			, #{boardLevel}
+			, #{boardRef}
 			)
 	</insert>
 	<select id="boardOneComment" parameterType="_int" resultType="comment">
@@ -140,7 +141,21 @@
   	<update id="modifyComment" parameterType="comment">
   		update board_comment
 		set
-			board_comment_content = #{boardCommentContent}
+			board_comment_content = #{boardCommentContent},
+			board_comment_date = sysdate
 		where board_comment_no = #{boardCommentNo}
   	</update>
+  	<select id="selectReply" parameterType="_int" resultType="board">
+  		select
+  			board_no as boardNo
+  			, board_level as boardLevel
+  			, board_writer as boardWriter
+  			, board_content as boardContent
+  			, board_title as boardTitle
+  			, board_ref as boardRef
+  			, board_ref as boardRef
+  			, board_date as boardDate
+  			, board_pw as boardPw
+  		from board where board_ref = #{boardNo}
+  	</select>
 </mapper>

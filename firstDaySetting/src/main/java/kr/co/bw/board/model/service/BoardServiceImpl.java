@@ -148,7 +148,6 @@ public class BoardServiceImpl {
 	public BoardViewData boardCommentList(int boardNo) {
 		BoardVO selectBoard = dao.selectOneBoard(boardNo);
 		List<BoardCommentVO> selectCommentList = dao.selectCommentList(boardNo);		
-		
 		BoardViewData data = new BoardViewData();
 		data.setB(selectBoard);
 		data.setCommentList(selectCommentList);
@@ -179,6 +178,11 @@ public class BoardServiceImpl {
 	public int modifyComment(BoardCommentVO bcv) {
 		// TODO Auto-generated method stub
 		return dao.modifyComment(bcv);
+	}
+
+	public BoardReplyVO replyInfo(int boardNo) {
+		// TODO Auto-generated method stub
+		return dao.selectReply(boardNo);
 	}
 	
 }

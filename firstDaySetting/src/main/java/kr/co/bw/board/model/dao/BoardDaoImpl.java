@@ -99,5 +99,10 @@ public class BoardDaoImpl {
 		// TODO Auto-generated method stub
 		return sqlSession.update("board.modifyComment", bcv);
 	}
+
+	public BoardReplyVO selectReply(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("board.selectReply", boardNo);
+	}
 	
 }

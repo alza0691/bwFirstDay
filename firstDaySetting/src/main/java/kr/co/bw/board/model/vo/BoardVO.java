@@ -10,47 +10,10 @@ public class BoardVO {
 	private String boardPw;
 	private String type;
 	private String keyword;
-	private int rnum;
+	private int commentCount;
+	private int boardLevel;
+	private int boardRef;
 	
-	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
-			String boardPw, String type, String keyword, int rnum) {
-		super();
-		this.boardNo = boardNo;
-		this.boardTitle = boardTitle;
-		this.boardContent = boardContent;
-		this.boardWriter = boardWriter;
-		this.boardDate = boardDate;
-		this.boardPw = boardPw;
-		this.type = type;
-		this.keyword = keyword;
-		this.rnum = rnum;
-	}
-
-
-	public String getBoardTitle2() {
-		return boardTitle.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
-	}
-	public String getBoardContent2() {
-		return boardContent.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
-	}
-	public String getBoardWriter2() {
-		return boardWriter.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
-	}
-	
-	public BoardVO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	public int getRnum() {
-		return rnum;
-	}
-
-
-	public void setRnum(int rnum) {
-		this.rnum = rnum;
-	}
-
 
 	public int getBoardNo() {
 		return boardNo;
@@ -100,5 +63,52 @@ public class BoardVO {
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
+	public int getCommentCount() {
+		return commentCount;
+	}
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
+	public int getBoardLevel() {
+		return boardLevel;
+	}
+	public void setBoardLevel(int boardLevel) {
+		this.boardLevel = boardLevel;
+	}
+	public int getBoardRef() {
+		return boardRef;
+	}
+	public void setBoardRef(int boardRef) {
+		this.boardRef = boardRef;
+	}
+	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
+			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.boardContent = boardContent;
+		this.boardWriter = boardWriter;
+		this.boardDate = boardDate;
+		this.boardPw = boardPw;
+		this.type = type;
+		this.keyword = keyword;
+		this.commentCount = commentCount;
+		this.boardLevel = boardLevel;
+		this.boardRef = boardRef;
+	}
+	public BoardVO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public String getBoardTitle2() {
+		return boardTitle.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
+	}
+	public String getBoardContent2() {
+		return boardContent.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
+	}
+	public String getBoardWriter2() {
+		return boardWriter.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&nbsp;", "&amp;nbsp;");
+	}
+	
 	
 }

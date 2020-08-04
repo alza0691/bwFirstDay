@@ -151,6 +151,7 @@
 	                    <li>
 	                    	<span>${bc.boardCommentContent }</span>
 	                    	<textarea class="form-control" name="boardCommentContent" style="display: none;">${bc.boardCommentContent }</textarea>
+	                    	<button type="submit" name="commentModifyButton" style="display: none;">확인</button>
 	                    </li>
 	                    <li>
 	                    	<a href="javascript:void(0)" onclick="modifyComment(this, '${bc.boardCommentNo}', '${bc.boardRef }')" class="left">수정</a>
@@ -347,29 +348,31 @@
     		type: "get",
     		success: function(data){
     			if (data == '1') {
-    				
-    				
+    				$(obj).parent().prev().find('textarea').show();
+    				$(obj).parent().prev().find('button').show();
+    				$(obj).parent().prev().find('span').hide();
     	        	var $form=$("<form action='/bw/board/modifyComment.do' method='post'></form>");
     	        	$form.append($("<input type='hidden' name='boardCommentNo' value='" + boardCommentNo + "'>"));
     	            $form.append($("<input type='hidden' name='boardRef' value='" + boardRef + "'>"));
     	            $form.append($(obj).parent().parent().find("textarea"));
-    	            
-    	            $(obj).parent().prev().children().append($form);
-				
-//     					$.ajax({
-//     						url: "/bw/board/deleteComment.do",
-//     			    		data: {
-// 	    			    			boardCommentPw : $(obj).next().val()
-// 	    		    				, boardCommentNo : boardCommentNo
-//     			    			},
-//     			    		type: "get",
-//     			    		success:function(data){
-//     			    			if(data == '1'){
-//     			    				console.log("삭제완료");
-//     			    				location.reload();
-//     			    			}
-//     			    		}
-//     					});
+    	            $(obj).parent().prev().append($form);
+    	            $(obj).parent().prev().find('button').click(function(){
+    					$.ajax({
+						url: "/bw/board/modifyComment.do",
+			    		data: {
+	    			    			boardCommentContent : $(obj).parent().prev().find('textarea').val()
+	    		    				, boardCommentNo : boardCommentNo
+			    			},
+			    		type: "get",
+			    		success:function(data){
+				    			if(data == '1'){
+				    				console.log("수정완료");
+				    				location.reload();
+				    			}
+			    			}
+						});
+    	            });
+
     				
                 } else{
                 	alert("비밀번호를 확인해 주세요.");

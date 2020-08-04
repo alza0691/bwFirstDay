@@ -96,7 +96,7 @@
 				<c:forEach items="${list}" var="list" varStatus="status">
                 	<tr>
 	                	<td>${num}</td>
-	                	<td class="title" style="text-align: left;"><p><a href="/bw/board/contentPage.do?boardNo=${list.boardNo }">${list.boardTitle2 }</a></p></td>
+	                	<td class="title" style="text-align: left;"><p><a href="/bw/board/contentPage.do?boardNo=${list.boardNo }">${list.boardTitle2 }(${list.commentCount })</a></p></td>
 	                	<td>${list.boardWriter2 }</td>
 	                	<td>${list.boardDate }</td>
 	                </tr>

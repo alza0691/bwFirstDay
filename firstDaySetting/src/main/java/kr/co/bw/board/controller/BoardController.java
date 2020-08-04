@@ -160,13 +160,15 @@ public class BoardController {
 	
 	@RequestMapping("/replyWriteFrm.do")
 	public String replyWriteFrm(Model model, int boardNo) {
+		BoardReplyVO reply = service.replyInfo(boardNo);
+		model.addAttribute("reply", reply);
 		model.addAttribute("boardNo", boardNo);
 		return "board/replyWrite";
 	}
 	
-	@RequestMapping("/replyWrite.do")
+	@RequestMapping(value="/replyWrite.do")
 	public String replyWrite(BoardReplyVO replyVo) {
-		System.out.println(replyVo.getBoardReplyWriter());
+		System.out.println(replyVo);
 		int result = service.replyInsert(replyVo);
 		if (result == 1) {
 			System.out.println("글쓰기 성공");
@@ -212,6 +214,7 @@ public class BoardController {
 	}
 	
 //	public String replyWrite(BoardReplyVO replyVo) {
-////		int boardReplyRef = replyVo.getBoardReplyRef() != 0 ? replyVo.getBoardReplyRef() : null;
-////		replyVo.setBoardReplyRef(boardReplyRef);
+//		int boardReplyRef = replyVo.getBoardReplyRef() != 0 ? replyVo.getBoardReplyRef() : null;
+//		replyVo.setBoardReplyRef(boardReplyRef);
+//	}
 }

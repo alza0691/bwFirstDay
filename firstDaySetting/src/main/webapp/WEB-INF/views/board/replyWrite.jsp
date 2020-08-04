@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>글쓰기</title>
+<title>답글쓰기</title>
 </head>
 <style>
 	section{
@@ -35,7 +35,7 @@
 <body>
 	<section>
 		<div class="container">
-		<h1>글쓰기</h1>
+		<h1>답글쓰기</h1>
 			<form action="/bw/board/replyWrite.do" method="post" id="form">
 				<table>
 					<tr>
@@ -46,27 +46,27 @@
 	                </tr>
 					<tr>
 						<td class="right">글쓴이</td>
-						<td><input type="text" name="boardReplyWriter" id="boardWriter" required placeholder="10자 이하로 작성하세요."></td>
+						<td><input type="text" name="boardWriter" id="boardWriter" required placeholder="10자 이하로 작성하세요."></td>
 					</tr>
 					<tr>
 						<td class="right">제목</td>
-						<td><input type="text" name="boardReplyTitle" id="boardTitle" required placeholder="40자 이하로 작성하세요."></td>
+						<td><input type="text" name="boardTitle" id="boardTitle" required placeholder="40자 이하로 작성하세요."></td>
 					</tr>
 					<tr>
 						<td class="right">내용</td>
 						<td>
-							<textarea name="boardReplyContent" id="boardContent" class="autosize" cols="30" rows="20" style="width:100%; min-height:300px; resize: none;"
+							<textarea name="boardContent" id="boardContent" class="autosize" cols="30" rows="20" style="width:100%; min-height:300px; resize: none;"
 							placeholder="1000자 이하로 작성하세요." required></textarea>
 							<span id="counter">0</span>/1000
 						</td>
 					</tr>
 					<tr>
 						<td class="right">비밀번호</td>
-						<td><input type="password" name="boardReplyPw" id="boardPw" required placeholder="숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요."></td>
+						<td><input type="password" name="boardPw" id="boardPw" required placeholder="숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요."></td>
 					</tr>
 				</table>
-				<input type="hidden" name="boardRef" value="${boardNo }">
-				<input type="hidden" name="boardReplyRef" value="${boardReplyRef }">
+				<input type="hidden" name="boardRef" id="boardRef" value="${boardNo }">
+				<input type="hidden" name="boardLevel" id="boardLevel" value="">
 			</form>
 			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>

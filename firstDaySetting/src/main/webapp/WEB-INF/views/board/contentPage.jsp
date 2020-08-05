@@ -99,6 +99,9 @@
 						</td>
 					</tr>
 					<tr>
+						<td><img src="/WEB-INF/img/${b.filename }" width="300">
+					</tr>
+					<tr>
 						<td style="text-align: right;">비밀번호</td>
 						<td><input type="password" id="boardPw" name="boardPw" style="width: 100%" required></td>
 					</tr>
@@ -253,6 +256,8 @@
 				type: "get",
 				success: function(data){
 					if(data=='1'){
+						$("#boardCommentWriter").val("");
+						$("#boardCommentPw").val("");
 						$("#boardCommentContent").val("");
 						
 						//댓글 불러오기
@@ -270,9 +275,9 @@
 										html += "<li><span>" + data.boardCommentDate + "</span></li>";
 										html += "<li><span>" + data.boardCommentContent + "</span>";
 										html += "<textarea class='form-control' name='boardCommentContent' style='display: none;'>" + data.boardCommentContent + "</textarea></li>"
-										html += "<li><a href='javascript:void(0)' onclick='modifyComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)'>수정</a>";
-										html += "<a href='javascript:void(0)' onclick='deleteComment(&#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)'>삭제</a></li>";
-									$(".comment-wrapper").append(html);			
+										html += "<li><a href='javascript:void(0)' onclick='modifyComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)' class='left'>수정</a>";
+										html += "<a href='javascript:void(0)' onclick='deleteComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)' class='left'>삭제</a></li>";
+									location.reload();
 							},
 							error: function(){
 								console.log("댓글 불러오기 ajax통신 실패"); 

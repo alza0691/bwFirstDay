@@ -13,6 +13,9 @@ public class BoardVO {
 	private int commentCount;
 	private int boardLevel;
 	private int boardRef;
+	private String filepath;
+	private String filename;
+
 	
 
 	public int getBoardNo() {
@@ -81,8 +84,21 @@ public class BoardVO {
 	public void setBoardRef(int boardRef) {
 		this.boardRef = boardRef;
 	}
+	public String getFilepath() {
+		return filepath;
+	}
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
 	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
-			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef) {
+			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef,
+			String filepath, String filename) {
 		super();
 		this.boardNo = boardNo;
 		this.boardTitle = boardTitle;
@@ -95,6 +111,8 @@ public class BoardVO {
 		this.commentCount = commentCount;
 		this.boardLevel = boardLevel;
 		this.boardRef = boardRef;
+		this.filepath = filepath;
+		this.filename = filename;
 	}
 	public BoardVO() {
 		super();

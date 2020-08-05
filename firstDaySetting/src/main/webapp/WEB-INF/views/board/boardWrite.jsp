@@ -60,6 +60,14 @@
 							<span id="counter">0</span>/1000
 						</td>
 					</tr>
+	                <tr>
+	                    <th>이미지 보기</th>
+	                    <td>
+	                        <div id="img-viewer">
+	                            <img id="img-view" width="350px;">
+	                        </div>
+	                    </td>
+	                </tr>
 					<tr>
 						<td class="right">비밀번호</td>
 						<td><input type="password" name="boardPw" id="boardPw" required placeholder="숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요."></td>
@@ -70,6 +78,7 @@
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>
 		</div>
 	</section>	
+	<br><br><br><br>
 </body>
 	<script>
 	$(".autosize").on("keyup", function() {

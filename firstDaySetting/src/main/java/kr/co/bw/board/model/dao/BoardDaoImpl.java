@@ -75,9 +75,9 @@ public class BoardDaoImpl {
 		return sqlSession.selectList("board.selectCommentList", boardNo);
 	}
 
-	public int replyInsert(BoardReplyVO replyVo) {
+	public int replyInsert(BoardVO boardVo) {
 		// TODO Auto-generated method stub
-		return sqlSession.insert("board.replyInsert",replyVo);
+		return sqlSession.insert("board.replyInsert",boardVo);
 	}
 
 	public BoardCommentVO boardOneComment(int boardNo) {
@@ -100,7 +100,7 @@ public class BoardDaoImpl {
 		return sqlSession.update("board.modifyComment", bcv);
 	}
 
-	public BoardReplyVO selectReply(int boardNo) {
+	public BoardVO selectReply(int boardNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("board.selectReply", boardNo);
 	}

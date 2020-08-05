@@ -49,7 +49,7 @@ public class BoardServiceImpl {
 		
 		//해당 페이지의 게시물들 조회
 		List<BoardVO> list = dao.selectMapperInfo(map);
-		
+				
 		System.out.println("totalPage = " + totalPage);
 		System.out.println("start = " + start);
 		System.out.println("end = " + end);
@@ -155,9 +155,9 @@ public class BoardServiceImpl {
 		return data;
 	}
 
-	public int replyInsert(BoardReplyVO replyVo) {
+	public int replyInsert(BoardVO boardVo) {
 		// TODO Auto-generated method stub
-		return dao.replyInsert(replyVo);
+		return dao.replyInsert(boardVo);
 	}
 
 	public BoardCommentVO boardOneComment(int boardNo) {
@@ -180,7 +180,7 @@ public class BoardServiceImpl {
 		return dao.modifyComment(bcv);
 	}
 
-	public BoardReplyVO replyInfo(int boardNo) {
+	public BoardVO replyInfo(int boardNo) {
 		// TODO Auto-generated method stub
 		return dao.selectReply(boardNo);
 	}

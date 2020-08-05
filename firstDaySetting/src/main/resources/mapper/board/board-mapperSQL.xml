@@ -2,16 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="board">
 	<select id="selectBoardList" parameterType="map" resultType="board">
+	
 	select *
 		from(
 			select rownum as rnum, b.* from
 				(select
 					board_no as boardNo,
-					board_title as boardTitle,
+					board_ref as boardRef,					
+					lpad('└─', 3*(level-1)) || board_title as boardTitle,
 					board_content as boardContent,
 					board_writer as boardWriter,
 					board_date as boardDate,
-					(select count(*) from board_comment where board_ref = board_no) as commentCount
+					(select count(*) from board_comment where board_ref = board_no) as commentCount,
+					level as boardLevel
 				from board 
 					<if test="type!=null">
 						<if test="type.equals('boardTitle')"> 
@@ -21,8 +24,11 @@
 							where board_writer like '%'||#{keyword}||'%'
 						</if>
 					</if>
-				order by board_no desc)b
+				start with board_ref is null
+				connect by prior board_no = board_ref
+				order siblings by board_no desc)b
 			)where rnum between #{start} and #{end}
+			
 	</select>
 	<select id="oneContent" parameterType="_int" resultType="board">
 		select
@@ -44,7 +50,9 @@
 			#{boardContent},
 			#{boardWriter},
 			sysdate,
-			#{boardPw}
+			#{boardPw},
+			#{filename},
+			#{filepath}
 		)
 	</insert>
 	<update id="boardUpdate" parameterType="board">

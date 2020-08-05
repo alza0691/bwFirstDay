@@ -36,7 +36,7 @@
 	<section>
 		<div class="container">
 		<h1>글쓰기</h1>
-			<form class="boardWrite" action="/bw/board/boardWrite.do" method="post" id="form" enctype="multipart/form-data">
+			<form class="boardWrite" action="/bw/board/boardWrite.do" method="post" id="form">
 				<table>
 					<tr>
 						<td width="12%" class="right">날짜</td>
@@ -61,9 +61,11 @@
 						</td>
 					</tr>
 	                <tr>
-	                    <th>첨부파일</th>
+	                    <th>이미지 보기</th>
 	                    <td>
-	                        <input type="file" name="uploadfile" placeholder="파일 선택" >
+	                        <div id="img-viewer">
+	                            <img id="img-view" width="350px;">
+	                        </div>
 	                    </td>
 	                </tr>
 					<tr>
@@ -76,8 +78,6 @@
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>
 		</div>
 	</section>	
-
-	
 	<br><br><br><br>
 </body>
 	<script>
@@ -198,8 +198,5 @@
 			    $('#counter').html(content.length);	
 			});
 		});
-		
-		
-		
 	</script>
 </html>

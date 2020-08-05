@@ -52,8 +52,7 @@
 			sysdate,
 			#{boardPw},
 			#{filename},
-			#{filepath},
-			null
+			#{filepath}
 		)
 	</insert>
 	<update id="boardUpdate" parameterType="board">

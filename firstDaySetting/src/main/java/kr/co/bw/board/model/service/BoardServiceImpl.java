@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import kr.co.bw.board.model.dao.BoardDaoImpl;
 import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
-import kr.co.bw.board.model.vo.BoardReplyVO;
 import kr.co.bw.board.model.vo.BoardVO;
 import kr.co.bw.board.model.vo.BoardViewData;
 

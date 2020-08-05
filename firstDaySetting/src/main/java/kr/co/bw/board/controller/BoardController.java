@@ -3,17 +3,24 @@ package kr.co.bw.board.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -75,52 +82,13 @@ public class BoardController {
 		return "board/contentPage";
 	}
 	
-	@RequestMapping("/boardWrite.do")
-	public String boardWrite(BoardVO boardVo, MultipartFile mp, HttpServletRequest request) {
-		//1) 업로드 경로
-		String root = request.getSession().getServletContext().getRealPath("/");
-		String saveDirectory = root + "upload/notice/";
-		
-		//2) 파일 크기 지정
-		int maxSize = 10 * 1024 * 1024;
-
-		//3) Request 변경
-		MultipartRequest mRequest = new MultipartRequest(request, saveDirectory, maxSize, "UTF-8", new DefaultFileRenamePolicy());
-		BoardVO n = new BoardVO();
-		n.setNoticeNo(Integer.parseInt(mRequest.getParameter("noticeNo")));
-		n.setNoticeTitle(mRequest.getParameter("noticeTitle"));
-		n.setNoticeContent(mRequest.getParameter("noticeContent"));
-		n.setFilename(mRequest.getOriginalFileName("filename"));
-		n.setFilepath(mRequest.getFilesystemName("filename"));
-			
-		String status = mRequest.getParameter("status");
-		String oldFilepath = mRequest.getParameter("oldFilepath");
-		String oldFilename = mRequest.getParameter("oldFilename");
-			
-		/*새 파일이 들어오지 않은 상태에서는 기존 값을 유지를 해야 함.
-		새 파일이 들어오지 않은 상태는 filename의 값이 null인 경우이다.
-		이런 경우 기존 값을 유지하지 않으면 DB에 null이 자동으로 들어가게 된다.
-		이를 해결하기 위해 새파일이 들어오지 않았다면 filename과 filepath를 기존 값으로 되돌린다.*/
-		if(n.getFilename() == null) {
-			if (status.equals("stay")) {
-				n.setFilename(oldFilename);
-				n.setFilepath(oldFilepath);
-			}
-		}
-		
-		int result = new NoticeService().updateNotice(n);
-		
-		if (result > 0) {
-			//status가 delete로 바뀐 경우 즉, 파일 삭제 버튼을 누른 경우 기존 파일을 삭제하는 작업을 한다.
-			if (status.equals("delete")) {
-				File delFile = new File(saveDirectory + oldFilepath);
-				delFile.delete();
-			}
-			request.setAttribute("msg", "수정 성공!");
-		} else {
-			request.setAttribute("msg", "수정 실패!");
-		}		
-	
+	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST)
+	public String boardWrite(BoardVO boardVo, MultipartFile uploadfile) {
+		logger.info("upload() POST 호출");
+	    logger.info("파일 이름: {}", uploadfile.getOriginalFilename());
+	    logger.info("파일 크기: {}", uploadfile.getSize());
+	    boardVo.setFilename(saveFile(uploadfile));
+	    boardVo.setFilepath(UPLOAD_PATH);
 		int result = service.boardWirte(boardVo);
 		if (result == 1) {
 			System.out.println("글쓰기 성공");
@@ -129,6 +97,30 @@ public class BoardController {
 		}
 		return "redirect:/bw/board/boardList.do";
 	}
+	
+	public org.slf4j.Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
+	private static final String UPLOAD_PATH = "C:\\Users\\lance";
+	
+	private String saveFile(MultipartFile file){
+	    // 파일 이름 변경
+	    UUID uuid = UUID.randomUUID();
+	    String saveName = uuid + "_" + file.getOriginalFilename();
+
+	    logger.info("saveName: {}",saveName);
+
+	    // 저장할 File 객체를 생성(껍데기 파일)ㄴ
+	    File saveFile = new File(UPLOAD_PATH,saveName); // 저장할 폴더 이름, 저장할 파일 이름
+
+	    try {
+	        file.transferTo(saveFile); // 업로드 파일에 saveFile이라는 껍데기 입힘
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+
+	    return saveName;
+	} // end saveFile(
 	
 	@RequestMapping(value = "/boardUpdate.do")
 	public String boardUpdate(BoardVO boardVo){

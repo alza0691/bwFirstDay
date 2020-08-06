@@ -61,7 +61,7 @@
 						</td>
 					</tr>
 	                <tr>
-	                    <th>첨부파일</th>
+	                    <td class="right">첨부파일</td>
 	                    <td>
 	                        <input type="file" name="uploadfile" placeholder="파일 선택" >
 	                    </td>

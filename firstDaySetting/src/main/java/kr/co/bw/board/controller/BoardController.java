@@ -1,14 +1,23 @@
 package kr.co.bw.board.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import com.oreilly.servlet.MultipartRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,19 +28,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 
 import com.google.gson.Gson;
 
 import kr.co.bw.board.model.service.BoardServiceImpl;
 import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
-import kr.co.bw.board.model.vo.BoardReplyVO;
 import kr.co.bw.board.model.vo.BoardVO;
 import kr.co.bw.board.model.vo.BoardViewData;
 
@@ -74,14 +84,200 @@ public class BoardController {
 	}	
 	
 	@RequestMapping("/contentPage.do")
-	public String contentPage(Model model, int boardNo) {
+	public String contentPage(Model model, int boardNo, HttpServletResponse response) {
 		BoardViewData data = service.boardCommentList(boardNo);
+
 		model.addAttribute("b", data.getB());
 		model.addAttribute("commentList", data.getCommentList());
 		
 		return "board/contentPage";
 	}
 	
+//	@RequestMapping("/boardWrite.do")
+//	public String upload(BoardVO boardVo, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		String root = request.getSession().getServletContext().getRealPath("C:\\Users\\lance\\Documents\\GitHub\\bwFirstDay\\firstDaySetting\\src\\main\\webapp\\resources\\");
+//		String saveDirectory = root + "upload\\";
+//		
+//		int maxSize = 10 * 1024 * 1024;
+//		
+//		MultipartRequest mRequest = new MultipartRequest(request, saveDirectory, maxSize, "utf-8");
+//		boardVo.setBoardContent(mRequest.getParameter("boardContent"));
+//		boardVo.setBoardTitle(mRequest.getParameter("boardTitle"));
+//		boardVo.setBoardWriter(mRequest.getParameter("boardWriter"));
+//		boardVo.setFilename(mRequest.getParameter("filename"));
+//		boardVo.setFilepath(mRequest.getParameter("filepath"));
+//		boardVo.setBoardPw(mRequest.getParameter("boardPw"));
+//		
+//		int result = service.boardWirte(boardVo);
+//		if (result == 1) {
+//			System.out.println("글쓰기 성공");
+//		} else {
+//			System.out.println("글쓰기 실패");
+//		}
+//		return "redirect:/bw/board/boardList.do";
+//	}
+
+	@RequestMapping("/boardFileDownload.do")
+	public String download(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String filename = request.getParameter("filename");
+		String filepath = request.getParameter("filepath");
+		
+		String root = request.getSession().getServletContext().getRealPath("/");
+		String saveDirectory = root + "upload/";
+		FileInputStream fis = new FileInputStream(saveDirectory + filepath);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		
+		ServletOutputStream sos = response.getOutputStream();
+		BufferedOutputStream bos = new BufferedOutputStream(sos);
+		
+		String resFilename = "";
+		boolean bool = request.getHeader("user-agent").indexOf("MSIE") != -1 || request.getHeader("user-agent").indexOf("Trident") != -1;
+		System.out.println("IE여부 : " + bool);
+		
+		if (bool) {//IE인 경우
+			resFilename = URLEncoder.encode(filename, "UTF-8");
+			resFilename = resFilename.replace("\\\\", "%20");
+			
+		} else {//나머지 브라우저인 경우
+			resFilename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+			
+		}
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=" +resFilename);
+		
+		int read = -1;
+		while((read = bis.read()) != -1) {
+			bos.write(read);
+		}
+		
+		bos.close();
+		bis.close();
+		return null;
+	}
+	
+//	public void download(HttpServletRequest request, HttpServletResponse response) {
+//		String filename = request.getParameter("filename");
+//		String filepath = request.getParameter("filepath");
+//		response.reset();
+//		
+//		if(request.getHeader("User-Agent").indexOf("MSIE5.0") > -1) {
+//			response.setHeader("Content-Type", "doesn/matter;");
+//		} else {
+//			response.setHeader("Content-Type",  "application/unknown");
+//		}
+//		response.setHeader("Content-Disposition",  "attachment;filename=\"" + filename + "\"");
+//		
+//		File fp = new File(filepath + filename);
+//		int read = 0;
+//		
+//		byte[] b = new byte[(int)fp.length()];
+//		
+//		if(fp.isFile()) {
+//			BufferedInputStream fin = null;
+//			try {
+//				fin = new BufferedInputStream(new FileInputStream(fp));
+//			} catch (FileNotFoundException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			BufferedOutputStream outs = null;
+//			try {
+//				outs = new BufferedOutputStream(response.getOutputStream());
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			
+//			try {
+//				while((read=fin.read(b)) != -1) {
+//					outs.write(b, 0, read);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}finally {
+//				if(outs != null) {try {
+//					outs.close();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}}
+//				if(fin != null) {try {
+//					fin.close();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}}
+//				}
+//			}
+//		}
+	
+//	@RequestMapping(value="/fileDownload.do")
+//	public String fileDownload( HttpServletResponse response, HttpServletRequest request, @RequestParam Map<String, String> paramMap, Model model) {
+//	 
+//	    String path = paramMap.get("filePath"); //full경로
+//	    String fileName = paramMap.get("fileName"); //파일명
+//	 
+//	    File file = new File(path);
+//	    FileInputStream fileInputStream = null;
+//	    ServletOutputStream servletOutputStream = null;
+//	 
+//	    try{
+//	        String downName = null;
+//	        String browser = request.getHeader("User-Agent");
+//	        //파일 인코딩
+//	        if(browser.contains("MSIE") || browser.contains("Trident") || browser.contains("Chrome")){//브라우저 확인 파일명 encode  
+//	            
+//	            downName = URLEncoder.encode(fileName,"UTF-8").replaceAll("\\+", "%20");
+//	            
+//	        }else{
+//	            
+//	            downName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+//	            
+//	        }
+//	        
+//	        response.setHeader("Content-Disposition","attachment;filename=\"" + downName+"\"");             
+//	        response.setContentType("application/octer-stream");
+//	        response.setHeader("Content-Transfer-Encoding", "binary;");
+//	 
+//	        fileInputStream = new FileInputStream(file);
+//	        servletOutputStream = response.getOutputStream();
+//	 
+//	        byte b [] = new byte[1024];
+//	        int data = 0;
+//	 
+//	        while((data=(fileInputStream.read(b, 0, b.length))) != -1){
+//	            
+//	            servletOutputStream.write(b, 0, data);
+//	            
+//	        }
+//	 
+//	        servletOutputStream.flush();//출력
+//	        
+//	    }catch (Exception e) {
+//	        e.printStackTrace();
+//	    }finally{
+//	        if(servletOutputStream!=null){
+//	            try{
+//	                servletOutputStream.close();
+//	            }catch (IOException e){
+//	                e.printStackTrace();
+//	            }
+//	        }
+//	        if(fileInputStream!=null){
+//	            try{
+//	                fileInputStream.close();
+//	            }catch (IOException e){
+//	                e.printStackTrace();
+//	            }
+//	        }
+//	    }
+//	    
+//
+//		return null;
+//
+//	}
+	
+
 	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST)
 	public String boardWrite(BoardVO boardVo, MultipartFile uploadfile) {
 		logger.info("upload() POST 호출");
@@ -99,9 +295,7 @@ public class BoardController {
 	}
 	
 	public org.slf4j.Logger logger = LoggerFactory.getLogger(BoardController.class);
-	
-	private static final String UPLOAD_PATH = "C:\\Users\\lance";
-	
+	private static final String UPLOAD_PATH = "D://file";
 	private String saveFile(MultipartFile file){
 	    // 파일 이름 변경
 	    UUID uuid = UUID.randomUUID();

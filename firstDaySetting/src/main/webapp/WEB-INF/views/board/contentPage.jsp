@@ -78,7 +78,7 @@
 	<section>
 		<div class="container">
 		<h1>콘텐츠</h1>
-			<form method="post">
+			<form method="post" action="/bw/board/boardFileDownload.do" id="form">
 				<table style="word-break:break-all">
 					<tr>
 						<td style="width: 12%; text-align: right;">날짜</td>
@@ -99,14 +99,20 @@
 						</td>
 					</tr>
 					<tr>
-						<td><img src="/WEB-INF/img/${b.filename }" width="300">
+						<td style="text-align: right;">첨부파일</td>
+						<td><a id="download">${b.filename }</a></td>
+						<%-- <td><a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.filename }</a></td> --%>
 					</tr>
 					<tr>
 						<td style="text-align: right;">비밀번호</td>
 						<td><input type="password" id="boardPw" name="boardPw" style="width: 100%" required></td>
+						
 					</tr>
+					
 				</table>
 				<br>
+				<input type="hidden" name="filename" value="${b.filename }">
+				<input type="hidden" name="filepath" value="${b.filepath }">
 				<input type="hidden" id="boardContent2" value="${b.boardContent }">
 				<input type="hidden" name="boardNo" id="boardNo" value="${b.boardNo }">
 				<button type="button" class="update">수정</button>
@@ -170,6 +176,15 @@
 </body>
 
 <script>
+$("#download").click(function(){
+	$("#form").submit();
+});
+	function fileDownload(filename, filepath) {
+		var newFilename = encodeURIComponent(filename);
+	    var newFilepath = encodeURIComponent(filepath);
+	    
+	    
+	}
 	$(document).ready(function() {
 		var autosize = $(".autosize"); 
 		var size = autosize.prop('scrollHeight');
@@ -389,6 +404,29 @@
     	});
       });
     }
+//     $("#download").click(function(){
+//         var fileName = "${b.filename }";
+//         window.open("/bw/board/test.do?&fileName="+fileName);
+    
+// //     	$.ajax({
+// //     		url: "/bw/board/fileDownload.do",
+// //     		data: {
+// //     					filePath : filePath, 
+// //     					fileName : fileName
+// //     			},
+// //     		type: "get",
+// //     		success: function(data){
+// //     			console.log(data);
+// //     			window.open("/bw/board/fileDownload.do?filePath="+filePath+"&fileName="+fileName);
+// //     		},
+// //     		error: function(){
+// //     			console.log("실패");
+    			
+// //     		}
+// //     	});
+        
+//      });
+
 
 </script>
 </html>

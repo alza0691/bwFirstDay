@@ -66,7 +66,6 @@
 					</tr>
 				</table>
 				<input type="hidden" name="boardRef" id="boardRef" value="${boardNo }">
-				<input type="hidden" name="boardLevel" id="boardLevel" value="2">
 			</form>
 			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>

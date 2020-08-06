@@ -36,7 +36,10 @@
 			board_title as boardTitle,
 			board_content as boardContent,
 			board_writer as boardWriter,
-			board_date as boardDate	
+			board_date as boardDate,
+			board_ref as boardRef,
+			board_filename as filename,
+			board_filepath as filepath
 		from board
 		where board_no = #{boardNo}
 	</select>
@@ -51,9 +54,9 @@
 			#{boardWriter},
 			sysdate,
 			#{boardPw},
+			null,
 			#{filename},
-			#{filepath},
-			null
+			#{filepath}
 		)
 	</insert>
 	<update id="boardUpdate" parameterType="board">
@@ -122,8 +125,9 @@
 			, #{boardWriter}
 			, sysdate
 			, #{boardPw}
-			, #{boardLevel}
 			, #{boardRef}
+			, #{filename}
+			, #{filepath}
 			)
 	</insert>
 	<select id="boardOneComment" parameterType="_int" resultType="comment">
@@ -157,11 +161,9 @@
   	<select id="selectReply" parameterType="_int" resultType="board">
   		select
   			board_no as boardNo
-  			, board_level as boardLevel
   			, board_writer as boardWriter
   			, board_content as boardContent
   			, board_title as boardTitle
-  			, board_ref as boardRef
   			, board_ref as boardRef
   			, board_date as boardDate
   			, board_pw as boardPw

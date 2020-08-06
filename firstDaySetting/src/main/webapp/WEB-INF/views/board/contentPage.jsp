@@ -100,9 +100,13 @@
 					</tr>
 					<tr>
 						<td style="text-align: right;">첨부파일</td>
+						<td><a href="/bw/board/download.do?filename=${b.filename }" >download</a>
+						</td>
+<%-- 						
 						<td><a id="download">${b.filename }</a></td>
-						<%-- <td><a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.filename }</a></td> --%>
-					</tr>
+						<td><a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.filename }</a></td>--%>
+					</tr> 
+	
 					<tr>
 						<td style="text-align: right;">비밀번호</td>
 						<td><input type="password" id="boardPw" name="boardPw" style="width: 100%" required></td>
@@ -177,14 +181,15 @@
 
 <script>
 $("#download").click(function(){
-	$("#form").submit();
+    
+    var filePath = "C:/tmp/test.txt";
+    var fileName = "test.txt";
+                
+    location.href = "/contract/fileDownload?filePath="+filePath+"&fileName="+fileName;
+    
 });
-	function fileDownload(filename, filepath) {
-		var newFilename = encodeURIComponent(filename);
-	    var newFilepath = encodeURIComponent(filepath);
-	    
-	    
-	}
+
+
 	$(document).ready(function() {
 		var autosize = $(".autosize"); 
 		var size = autosize.prop('scrollHeight');

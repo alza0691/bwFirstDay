@@ -2,6 +2,7 @@ package kr.co.bw.board.model.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +19,7 @@ public class BoardServiceImpl {
 	@Autowired
 	@Qualifier("boardDao")
 	private BoardDaoImpl dao;
-
+	
 	public BoardData selectBoardList(int reqPage, String type, String keyword) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("type", type);

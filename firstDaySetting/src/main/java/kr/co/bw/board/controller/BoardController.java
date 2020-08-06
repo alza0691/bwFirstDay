@@ -15,8 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
-import com.oreilly.servlet.MultipartRequest;
 
+import javax.activation.CommandMap;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
@@ -117,43 +118,107 @@ public class BoardController {
 //		return "redirect:/bw/board/boardList.do";
 //	}
 
-	@RequestMapping("/boardFileDownload.do")
-	public String download(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String filename = request.getParameter("filename");
-		String filepath = request.getParameter("filepath");
-		
-		String root = request.getSession().getServletContext().getRealPath("/");
-		String saveDirectory = root + "upload/";
-		FileInputStream fis = new FileInputStream(saveDirectory + filepath);
-		BufferedInputStream bis = new BufferedInputStream(fis);
-		
-		ServletOutputStream sos = response.getOutputStream();
-		BufferedOutputStream bos = new BufferedOutputStream(sos);
-		
-		String resFilename = "";
-		boolean bool = request.getHeader("user-agent").indexOf("MSIE") != -1 || request.getHeader("user-agent").indexOf("Trident") != -1;
-		System.out.println("IE여부 : " + bool);
-		
-		if (bool) {//IE인 경우
-			resFilename = URLEncoder.encode(filename, "UTF-8");
-			resFilename = resFilename.replace("\\\\", "%20");
-			
-		} else {//나머지 브라우저인 경우
-			resFilename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
-			
-		}
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment; filename=" +resFilename);
-		
-		int read = -1;
-		while((read = bis.read()) != -1) {
-			bos.write(read);
-		}
-		
-		bos.close();
-		bis.close();
-		return null;
+	@RequestMapping(value="download.do")
+	public void fileDownload( HttpServletResponse response, HttpServletRequest request, @RequestParam Map<String, String> paramMap) {
+	 
+	    String path = paramMap.get("filePath"); //full경로
+	    String fileName = paramMap.get("fileName"); //파일명
+	 
+	    File file = new File(path);
+	 
+	    FileInputStream fileInputStream = null;
+	    ServletOutputStream servletOutputStream = null;
+	 
+	    try{
+	        String downName = null;
+	        String browser = request.getHeader("User-Agent");
+	        //파일 인코딩
+	        if(browser.contains("MSIE") || browser.contains("Trident") || browser.contains("Chrome")){//브라우저 확인 파일명 encode  
+	            
+	            downName = URLEncoder.encode(fileName,"UTF-8").replaceAll("\\+", "%20");
+	            
+	        }else{
+	            
+	            downName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+	            
+	        }
+	        
+	        response.setHeader("Content-Disposition","attachment;filename=\"" + downName+"\"");             
+	        response.setContentType("application/octer-stream");
+	        response.setHeader("Content-Transfer-Encoding", "binary;");
+	 
+	        fileInputStream = new FileInputStream(file);
+	        servletOutputStream = response.getOutputStream();
+	 
+	        byte b [] = new byte[1024];
+	        int data = 0;
+	 
+	        while((data=(fileInputStream.read(b, 0, b.length))) != -1){
+	            
+	            servletOutputStream.write(b, 0, data);
+	            
+	        }
+	 
+	        servletOutputStream.flush();//출력
+	        
+	    }catch (Exception e) {
+	        e.printStackTrace();
+	    }finally{
+	        if(servletOutputStream!=null){
+	            try{
+	                servletOutputStream.close();
+	            }catch (IOException e){
+	                e.printStackTrace();
+	            }
+	        }
+	        if(fileInputStream!=null){
+	            try{
+	                fileInputStream.close();
+	            }catch (IOException e){
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 	}
+
+	
+//	@RequestMapping("/boardFileDownload.do")
+//	public String download(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		String filename = request.getParameter("filename");
+//		String filepath = request.getParameter("filepath");
+//		
+//		String root = request.getSession().getServletContext().getRealPath("/");
+//		String saveDirectory = root + "upload/";
+//		FileInputStream fis = new FileInputStream(saveDirectory + filepath);
+//		BufferedInputStream bis = new BufferedInputStream(fis);
+//		
+//		ServletOutputStream sos = response.getOutputStream();
+//		BufferedOutputStream bos = new BufferedOutputStream(sos);
+//		
+//		String resFilename = "";
+//		boolean bool = request.getHeader("user-agent").indexOf("MSIE") != -1 || request.getHeader("user-agent").indexOf("Trident") != -1;
+//		System.out.println("IE여부 : " + bool);
+//		
+//		if (bool) {//IE인 경우
+//			resFilename = URLEncoder.encode(filename, "UTF-8");
+//			resFilename = resFilename.replace("\\\\", "%20");
+//			
+//		} else {//나머지 브라우저인 경우
+//			resFilename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+//			
+//		}
+//		response.setContentType("application/octet-stream");
+//		response.setHeader("Content-Disposition", "attachment; filename=" +resFilename);
+//		
+//		int read = -1;
+//		while((read = bis.read()) != -1) {
+//			bos.write(read);
+//		}
+//		
+//		bos.close();
+//		bis.close();
+//		return null;
+//	}
 	
 //	public void download(HttpServletRequest request, HttpServletResponse response) {
 //		String filename = request.getParameter("filename");

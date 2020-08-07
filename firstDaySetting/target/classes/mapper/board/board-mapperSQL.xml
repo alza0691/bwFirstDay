@@ -62,8 +62,10 @@
 	<update id="boardUpdate" parameterType="board">
 		update board
 		set
-			board_title = #{boardTitle},
-			board_content = #{boardContent}
+			board_title = #{boardTitle}
+			, board_content = #{boardContent}
+			, board_filename = #{filename}
+			, board_filepath = #{filepath}
 		where board_no = #{boardNo}
 		
 	</update>
@@ -73,7 +75,9 @@
 			board_title as boardTitle,
 			board_content as boardContent,
 			board_writer as boardWriter,
-			board_date as boardDate
+			board_date as boardDate,
+			board_filename as filename,
+			board_filepath as filepath	
 		from board
 		where board_no = #{boardNo}
 	</select>
@@ -169,4 +173,10 @@
   			, board_pw as boardPw
   		from board where board_ref = #{boardNo}
   	</select>
+  	<update id="deleteFile" parameterType="_int">
+  		update board
+  		set board_filename = ''
+  		,board_filepath = ''
+  		where board_no = #{boardNo} 
+  	</update>
 </mapper>

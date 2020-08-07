@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
     <script type='text/javascript' src='http://code.jquery.com/jquery-3.3.1.js'></script>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,12 +30,22 @@
     .right{
     	text-align: right;
     }
+    .hide{
+    	display: none;
+    }
+    .show{
+    	display: block;
+    }
+	input[type='file'] {
+	  opacity:0    
+	}
+
 </style>
 <body>
 	<section>
 		<div class="container">
 		<h1>게시판 수정</h1>
-			<form action="/bw/board/boardUpdate.do" method="post" id="boardUpdate">
+			<form action="/bw/board/boardUpdate.do" method="post" id="boardUpdate" enctype="multipart/form-data">
 				<table>
 					<tr>
 						<td class="right" style="width:13.5%;">날짜</td>
@@ -56,6 +67,19 @@
 							<span id="counter"></span>/1000
 						</td>
 					</tr>
+					<tr>
+						<td class="right" rowspan='2'>첨부파일</td>
+						<td>
+							<span id="showName">${boardVo.filename }</span>
+							<input type="file" id="uploadfile" name="uploadfile" class="fileButton" style="width:0%; float: left;" >
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button type="button" id='button'>파일찾기</button>
+							<button type="button" id="deleteButton">파일삭제</button>
+						</td>
+					</tr>
 				</table>
 				<input type="hidden" id="boardNo" name="boardNo" value="${boardVo.boardNo }">
 			</form>
@@ -67,6 +91,12 @@
 	</section>	
 </body>
 <script>
+// function fileDownload(filename, filepath) {
+// 	var newFilename = encodeURIComponent(filename);
+//     var newFilepath = encodeURIComponent(filepath);
+    
+//     location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
+// }
 	$(document).ready(function() {
 		var autosize = $(".autosize"); 
 		var size = autosize.prop('scrollHeight');
@@ -75,6 +105,7 @@
 		var content = $("#boardContent").val();
 		$("#boardContent").height(((content.split('\n').length + 1) * 1.5) + 'em');
 	    $('#counter').html(content.length);	
+	    
 	});
 
 	$(function(){
@@ -134,6 +165,22 @@
 			$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
 		    $('#counter').html(content.length);	
 		});
+		$("#deleteButton").click(function(){
+			$("#showName").html("");
+			if ($.browser.msie) { // ie 일때  input[type=file] init. 
+				$("#uploadfile").replaceWith( $("#uploadfile").clone(true) ); 
+			} else { // other browser 일때 input[type=file] init. 
+				$("#uploadfile").val(""); 
+			}
+	});
+		$('#button').click(function(){
+			$("input[type='file']").trigger('click');
+		});
+		$("input[type='file']").change(function(){
+			$('#showName').text(this.value.replace(/C:\\fakepath\\/i, ''));
+			console.log($("#uploadfile").val());
+		});
+
 	});
 
 </script>

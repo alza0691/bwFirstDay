@@ -105,5 +105,10 @@ public class BoardDaoImpl {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("board.selectReply", boardNo);
 	}
+
+	public int deleteFile(int boardNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("board.deleteFile", boardNo);
+	}
 	
 }

@@ -100,13 +100,10 @@
 					</tr>
 					<tr>
 						<td style="text-align: right;">첨부파일</td>
-						<td><a href="/bw/board/download.do?filename=${b.filename }" >download</a>
-						</td>
-<%-- 						
-						<td><a id="download">${b.filename }</a></td>
-						<td><a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.filename }</a></td>--%>
+					<td>
+                    	<a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.filename }</a>
+                    </td>
 					</tr> 
-	
 					<tr>
 						<td style="text-align: right;">비밀번호</td>
 						<td><input type="password" id="boardPw" name="boardPw" style="width: 100%" required></td>
@@ -180,14 +177,12 @@
 </body>
 
 <script>
-$("#download").click(function(){
+function fileDownload(filename, filepath) {
+	var newFilename = encodeURIComponent(filename);
+    var newFilepath = encodeURIComponent(filepath);
     
-    var filePath = "C:/tmp/test.txt";
-    var fileName = "test.txt";
-                
-    location.href = "/contract/fileDownload?filePath="+filePath+"&fileName="+fileName;
-    
-});
+    location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
+}
 
 
 	$(document).ready(function() {

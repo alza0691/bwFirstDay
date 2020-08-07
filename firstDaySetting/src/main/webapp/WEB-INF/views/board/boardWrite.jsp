@@ -61,11 +61,18 @@
 						</td>
 					</tr>
 	                <tr>
-	                    <td class="right">첨부파일</td>
+	                    <td class="right" rowspan='2'>첨부파일</td>
 	                    <td>
-	                        <input type="file" name="uploadfile" placeholder="파일 선택" >
+	                    	<span id="showName">${boardVo.filename }</span>
+	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;">
 	                    </td>
 	                </tr>
+	                <tr>
+						<td>
+							<button type="button" id='button'>파일찾기</button>
+							<button type="button" id="deleteButton">파일삭제</button>
+						</td>
+					</tr>
 					<tr>
 						<td class="right">비밀번호</td>
 						<td><input type="password" name="boardPw" id="boardPw" required placeholder="숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요."></td>
@@ -196,6 +203,21 @@
 				var content = $(this).val();
 				$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
 			    $('#counter').html(content.length);	
+			});
+			$("#deleteButton").click(function(){
+				$("#showName").html("");
+				if ($.browser.msie) { // ie 일때  input[type=file] init. 
+					$("#uploadfile").replaceWith( $("#uploadfile").clone(true) ); 
+				} else { // other browser 일때 input[type=file] init. 
+					$("#uploadfile").val(""); 
+				}
+			});
+			$('#button').click(function(){
+				$("input[type='file']").trigger('click');
+			});
+			$("input[type='file']").change(function(){
+				$('#showName').text(this.value.replace(/C:\\fakepath\\/i, ''));
+				console.log($("#uploadfile").val());
 			});
 		});
 		

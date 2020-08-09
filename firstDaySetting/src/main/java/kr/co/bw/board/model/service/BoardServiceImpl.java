@@ -148,10 +148,9 @@ public class BoardServiceImpl {
 	public BoardViewData boardCommentList(int boardNo) {
 		BoardVO selectBoard = dao.selectOneBoard(boardNo);
 		List<BoardCommentVO> selectCommentList = dao.selectCommentList(boardNo);
-		System.out.println("selectedBoard name" + selectBoard.getFilename());
+		System.out.println("selectedBoard name : " + selectBoard.getFilename());
 		String name = selectBoard.getFilename();
-		System.out.println("name+indexof : " + name.indexOf("_"));
-//		String originalName = data.getB().getFilename().substring(data.getB().getFilename().indexOf("_") +1);
+		selectBoard.setShowFilename(name.substring(name.indexOf('_')+1));
 		
 		BoardViewData data = new BoardViewData();
 		data.setB(selectBoard);

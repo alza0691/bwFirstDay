@@ -101,7 +101,7 @@
 					<tr>
 						<td style="text-align: right;">첨부파일</td>
 					<td>
-                    	<a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.filename }</a>
+                    	<a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.showFilename }</a>
                     </td>
 					</tr> 
 					<tr>

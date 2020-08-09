@@ -17,16 +17,9 @@ public class BoardVO {
 	private int boardRef;
 	private String filepath;
 	private String filename;
-	private MultipartFile mp;
+	private String showFilename;
 
 	
-
-	public MultipartFile getMp() {
-		return mp;
-	}
-	public void setMp(MultipartFile mp) {
-		this.mp = mp;
-	}
 	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
 			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef,
 			String filepath, String filename, MultipartFile mp) {
@@ -44,8 +37,8 @@ public class BoardVO {
 		this.boardRef = boardRef;
 		this.filepath = filepath;
 		this.filename = filename;
-		this.mp = mp;
 	}
+
 	public int getBoardNo() {
 		return boardNo;
 	}
@@ -124,7 +117,31 @@ public class BoardVO {
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
-
+	public String getShowFilename() {
+		return showFilename;
+	}
+	public void setShowFilename(String showFilename) {
+		this.showFilename = showFilename;
+	}
+	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
+			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef,
+			String filepath, String filename, String showFilename) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.boardContent = boardContent;
+		this.boardWriter = boardWriter;
+		this.boardDate = boardDate;
+		this.boardPw = boardPw;
+		this.type = type;
+		this.keyword = keyword;
+		this.commentCount = commentCount;
+		this.boardLevel = boardLevel;
+		this.boardRef = boardRef;
+		this.filepath = filepath;
+		this.filename = filename;
+		this.showFilename = showFilename;
+	}
 	public BoardVO() {
 		super();
 		// TODO Auto-generated constructor stub

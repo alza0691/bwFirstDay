@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.ServletOutputStream;
@@ -269,8 +270,9 @@ public class BoardController {
 	
 	@RequestMapping("/replyWriteFrm.do")
 	public String replyWriteFrm(Model model, int boardNo) {
-		BoardVO reply = service.replyInfo(boardNo);
-		model.addAttribute("reply", reply);
+//		BoardVO reply = service.replyInfo(boardNo);
+//		model.addAttribute("reply", reply);
+//		model.addAttribute("boardNo", boardNo);
 		model.addAttribute("boardNo", boardNo);
 		return "board/replyWrite";
 	}
@@ -331,5 +333,18 @@ public class BoardController {
 		} else {
 			return "0";
 		}
+	}
+	
+	@RequestMapping("/excelUpFrm.do")
+	public String excelUpFrm() {
+		return "board/excelUpload";
+	}
+	
+	@RequestMapping(value="/excelUp.do", method = RequestMethod.POST)
+	public String excelUp() {
+		logger.info("ExcelUp start");
+		Map returnObject = new HashMap();
+		
+		return null;
 	}
 }

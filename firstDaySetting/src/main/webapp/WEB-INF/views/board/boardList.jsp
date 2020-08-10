@@ -84,6 +84,7 @@
 		<div class="container">
 		<h1>리스트</h1>
 		<span><a href="/bw/board/boardWriteFrm.do">글쓰기</a></span>
+		<span><a href="/bw/board/excelUpFrm.do">엑셀 업로드</a></span>
 			<table>
 				<tr>
 					<td width="10%">번호</td>

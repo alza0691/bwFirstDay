@@ -4,15 +4,25 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 
@@ -340,11 +351,41 @@ public class BoardController {
 		return "board/excelUpload";
 	}
 	
+	@ResponseBody
 	@RequestMapping(value="/excelUp.do", method = RequestMethod.POST)
-	public String excelUp() {
-		logger.info("ExcelUp start");
-		Map returnObject = new HashMap();
+	public Map<String, Object> excelUp(MultipartFile testFile, MultipartHttpServletRequest request) {
+		MultipartFile excelFile = request.getFile("excelFile");
+		if(excelFile == null || excelFile.isEmpty()) {
+			throw new RuntimeException("엑셀파일을 선택해 주세요");
+		}
+		File destFile = new File("C:\\Users\\lance\\Desktop\\" + excelFile.getOriginalFilename());
 		
-		return null;
+		try {
+			excelFile.transferTo(destFile);
+		} catch(Exception e) {
+			throw new RuntimeException(e.getMessage(),e);
+		}
+		Map<String, Object> result = service.ExcelUpload(destFile);
+		destFile.delete();
+		
+		return result;
 	}
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

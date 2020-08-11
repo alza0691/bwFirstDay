@@ -1,5 +1,6 @@
 package kr.co.bw.board.model.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
 import kr.co.bw.board.model.vo.BoardVO;
 import kr.co.bw.board.model.vo.BoardViewData;
+import utils.ExcelRead;
+import utils.ExcelReadOption;
 
 @Service("boardService")
 public class BoardServiceImpl {
@@ -195,5 +198,35 @@ public class BoardServiceImpl {
 		// TODO Auto-generated method stub
 		return dao.deleteFile(boardNo);
 	}
+
+	public Map<String, Object> ExcelUpload(File destFile) {
+		ExcelReadOption excelReadOption = new ExcelReadOption();
+		excelReadOption.setFilePath(destFile.getAbsolutePath());
+//		excelReadOption.setOutputColumns("a", "b", "c");
+		excelReadOption.setStartRow(2);
+		
+		List<Map<String, String>> excelContent = ExcelRead.read(excelReadOption);
+		
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("excelContent", excelContent);
+		System.out.println(excelContent);
+		
+		try {
+			dao.insertExcel(paramMap);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return paramMap;
+	}
 	
 }
+
+
+
+
+
+
+
+
+
+

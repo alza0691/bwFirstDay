@@ -179,4 +179,14 @@
   		,board_filepath = ''
   		where board_no = #{boardNo} 
   	</update>
+  	<insert id="insertExcel" parameterType="map">
+  		insert into excel values
+  		<foreach collection = "excelContent" item="item" separator=",">
+  		(
+  			excel_seq.nextval
+  			, #{
+  			, #{excelContent}
+  		)
+  		</foreach>
+  	</insert>
 </mapper>

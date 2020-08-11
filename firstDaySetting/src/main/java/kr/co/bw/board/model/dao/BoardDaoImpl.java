@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import kr.co.bw.board.model.vo.BoardCommentVO;
-import kr.co.bw.board.model.vo.BoardReplyVO;
 import kr.co.bw.board.model.vo.BoardVO;
 
 
@@ -109,6 +108,11 @@ public class BoardDaoImpl {
 	public int deleteFile(int boardNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("board.deleteFile", boardNo);
+	}
+
+	public int insertExcel(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("board.insertExcel", paramMap);
 	}
 	
 }

@@ -9,7 +9,7 @@
 <title>엑셀 업로드</title>
 </head>
 <body>
-	<form name="excelUp" id="excelUp" enctype="multipart/form-data" method="post" action="bw/board/excelUp.do">
+	<form name="excelUp" id="excelUp" enctype="multipart/form-data" method="post" action="/bw/board/excelUp.do">
 		<input type="file" id="excelFile" name="excelFile" value="엑셀 업로드">
 	</form>
 </body>
@@ -21,7 +21,7 @@
 	    $.ajax({
 	       enctype:"multipart/form-data",
 	       method:"post",
-	       url: 'bw/board/excelUp.do',
+	       url: '/bw/board/excelUp.do',
 	       processData: false,   
 	       contentType: false,
 	       cache: false,

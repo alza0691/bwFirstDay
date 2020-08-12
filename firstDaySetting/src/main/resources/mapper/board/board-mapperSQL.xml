@@ -14,7 +14,8 @@
 					board_writer as boardWriter,
 					board_date as boardDate,
 					(select count(*) from board_comment where board_ref = board_no) as commentCount,
-					level as boardLevel
+					level as boardLevel,
+					board_filename as filename
 				from board 
 					<if test="type!=null">
 						<if test="type.equals('boardTitle')"> 

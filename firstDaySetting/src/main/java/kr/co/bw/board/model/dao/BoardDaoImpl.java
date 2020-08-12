@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardVO;
+import kr.co.bw.board.model.vo.BoardVO2;
 
 
 
@@ -29,7 +30,7 @@ public class BoardDaoImpl {
 		return sqlSession.delete("board.boardDelete",boardVo);
 	}
 
-	public int boardWrite(BoardVO boardVo) {
+	public int boardWrite(BoardVO2 boardVo) {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("board.boardWrite",boardVo);
 	}

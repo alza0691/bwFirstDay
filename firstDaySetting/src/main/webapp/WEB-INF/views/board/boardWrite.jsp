@@ -64,7 +64,8 @@
 	                    <td class="right" rowspan='2'>첨부파일</td>
 	                    <td>
 	                    	<span id="showName">${boardVo.filename }</span>
-	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;">
+<!-- 	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;"> -->
+								<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]">
 	                    </td>
 	                </tr>
 	                <tr>

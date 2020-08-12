@@ -4,25 +4,17 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -40,7 +33,9 @@ import kr.co.bw.board.model.service.BoardServiceImpl;
 import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
 import kr.co.bw.board.model.vo.BoardVO;
+import kr.co.bw.board.model.vo.BoardVO2;
 import kr.co.bw.board.model.vo.BoardViewData;
+import sun.util.locale.StringTokenIterator;
 
 @Controller
 @RequestMapping("/bw/board")
@@ -50,7 +45,7 @@ public class BoardController {
 	private BoardServiceImpl service;
 
 	@RequestMapping("/boardList.do")
-	public String boardList(Model model, HttpServletRequest request) {
+	public String boardList(HttpServletRequest request) {
 		int reqPage = 0;
 		try {
 			reqPage = Integer.parseInt(request.getParameter("reqPage"));
@@ -81,9 +76,13 @@ public class BoardController {
 	}	
 	
 	@RequestMapping("/contentPage.do")
-	public String contentPage(Model model, int boardNo, HttpServletResponse response) {
+	public String contentPage(Model model, int boardNo, BoardData boardData) {
 		BoardViewData data = service.boardCommentList(boardNo);
-		System.out.println("data.getB() : " + data.getB());
+		BoardData paging = new BoardData();
+		paging.setReqPage(boardData.getReqPage());
+		paging.setKeyword(boardData.getKeyword());
+		paging.setType(boardData.getType());
+		model.addAttribute("paging", paging);
 		model.addAttribute("b", data.getB());
 		model.addAttribute("commentList", data.getCommentList());
 		
@@ -96,8 +95,16 @@ public class BoardController {
 			String filename = request.getParameter("filename");
 			String filepath = UPLOAD_PATH;
 			File file = new File(filepath + "\\" + filename);
-			System.out.println(filename);
-			System.out.println(filepath);
+			
+			String [] str = filename.split("*");
+			String mStr1 = str[0];
+			String mStr2 = str[1];
+			String mStr3 = str[2];
+			
+//			String multiNameFirst = filename.substring(filename.indexOf('*')+1);
+//			String multiNameSecond = filename.substring(filename.indexOf('*')+1);
+//			String multiNameThird = filename.substring(filename.indexOf('*')+1);
+			
 			
 			//1) 경로설정
 //			String root = request.getSession().getServletContext().getRealPath("/");
@@ -116,15 +123,16 @@ public class BoardController {
 			boolean bool = request.getHeader("user-agent").indexOf("MSIE") != -1 || request.getHeader("user-agent").indexOf("Trident") != -1;
 			System.out.println("IE여부 : " + bool);
 			
-			String name = filename.substring(filename.indexOf('_')+1);
-			System.out.println(name);
+			String str1 = mStr1.substring(filename.indexOf('_')+1);
+			String str2 = mStr2.substring(filename.indexOf('_')+1);
+			String str3 = mStr3.substring(filename.indexOf('_')+1);
 			
 			if (bool) {//IE인 경우
-				resFilname = URLEncoder.encode(name, "UTF-8");
+				resFilname = URLEncoder.encode(str1, "UTF-8");
 				resFilname = resFilname.replace("\\\\", "%20");
 				
 			} else {//나머지 브라우저인 경우
-				resFilname = new String(name.getBytes("UTF-8"), "ISO-8859-1");
+				resFilname = new String(str1.getBytes("UTF-8"), "ISO-8859-1");
 				
 			}
 			
@@ -143,13 +151,31 @@ public class BoardController {
 			bis.close();
 	 }
 	
-
+	 //단독파일 쓰기
+//	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST)
+//	public String boardWrite(BoardVO boardVo, MultipartFile uploadfile) {
+//		logger.info("upload() POST 호출");
+//	    logger.info("파일 이름: {}", uploadfile.getOriginalFilename());
+//	    logger.info("파일 크기: {}", uploadfile.getSize());
+//	    boardVo.setFilename(saveFile(uploadfile));
+//	    if(boardVo.getFilename()==null) {
+//	    	boardVo.setFilepath(null);
+//	    } else {
+//	    	boardVo.setFilepath(UPLOAD_PATH);
+//	    }
+//		int result = service.boardWirte(boardVo);
+//		if (result == 1) {
+//			System.out.println("글쓰기 성공");
+//		} else {
+//			System.out.println("글쓰기 실패");
+//		}
+//		return "redirect:/bw/board/boardList.do";
+//	}
+	
 	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST)
-	public String boardWrite(BoardVO boardVo, MultipartFile uploadfile) {
-		logger.info("upload() POST 호출");
-	    logger.info("파일 이름: {}", uploadfile.getOriginalFilename());
-	    logger.info("파일 크기: {}", uploadfile.getSize());
-	    boardVo.setFilename(saveFile(uploadfile));
+	public String boardWrite(BoardVO2 boardVo, @RequestParam("uploadfile[]") MultipartFile[] uploadfile) {
+		boardVo.setFilename(saveFile(uploadfile));
+			
 	    if(boardVo.getFilename()==null) {
 	    	boardVo.setFilepath(null);
 	    } else {
@@ -164,37 +190,60 @@ public class BoardController {
 		return "redirect:/bw/board/boardList.do";
 	}
 	
-	public org.slf4j.Logger logger = LoggerFactory.getLogger(BoardController.class);
-	private static final String UPLOAD_PATH = "C:\\Users\\lance";
-	private String saveFile(MultipartFile file){
-	    // 파일 이름 변경
-		if(file.getOriginalFilename() != "") {
-	    UUID uuid = UUID.randomUUID();
-	    String saveName = uuid + "_" + file.getOriginalFilename();
-
-	    logger.info("saveName: {}",saveName);
-
-	    // 저장할 File 객체를 생성(껍데기 파일)ㄴ
-	    File saveFile = new File(UPLOAD_PATH,saveName); // 저장할 폴더 이름, 저장할 파일 이름
-
-	    try {
-	        file.transferTo(saveFile); // 업로드 파일에 saveFile이라는 껍데기 입힘
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }
-
-	    return saveName;
+	private String saveFile(@RequestParam("uploadfile[]") MultipartFile[] file){
+		String multifileName = "";
+		if(file.length != 0) {
+			for(int i = 0; i < file.length; i++) {
+			    UUID uuid = UUID.randomUUID();
+			    String saveName = uuid + "_" + file[i].getOriginalFilename();
+			    File saveFile = new File(UPLOAD_PATH,saveName);
+			    try {
+					file[i].transferTo(saveFile);
+					System.out.println("파일 업로드");
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    multifileName += "*" + saveName;
+			}
+			return multifileName;
 		} else {
 			return null;
 		}
-	} // end saveFile(
+	}
+	
+	public org.slf4j.Logger logger = LoggerFactory.getLogger(BoardController.class);
+	private static final String UPLOAD_PATH = "C:\\Users\\lance";
+	//단독파일 올리기
+//	private String saveFile(MultipartFile file){
+//	    // 파일 이름 변경
+//		if(file.getOriginalFilename() != "") {
+//	    UUID uuid = UUID.randomUUID();
+//	    String saveName = uuid + "_" + file.getOriginalFilename();
+//
+//	    logger.info("saveName: {}",saveName);
+//
+//	    // 저장할 File 객체를 생성(껍데기 파일)ㄴ
+//	    File saveFile = new File(UPLOAD_PATH,saveName); // 저장할 폴더 이름, 저장할 파일 이름
+//
+//	    try {
+//	        file.transferTo(saveFile); // 업로드 파일에 saveFile이라는 껍데기 입힘
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	        return null;
+//	    }
+//
+//	    return saveName;
+//		} else {
+//			return null;
+//		}
+//	}
 	
 	@RequestMapping(value = "/boardUpdate.do", method = RequestMethod.POST)
-	public String boardUpdate(BoardVO boardVo, MultipartFile uploadfile){
-		logger.info("upload() POST 호출");
-	    logger.info("파일 이름: {}", uploadfile.getOriginalFilename());
-	    logger.info("파일 크기: {}", uploadfile.getSize());
+	public String boardUpdate(BoardVO boardVo, MultipartFile[] uploadfile){
 	    boardVo.setFilename(saveFile(uploadfile));
 	    if(boardVo.getFilename()==null) {
 	    	boardVo.setFilepath(null);
@@ -280,24 +329,32 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/replyWriteFrm.do")
-	public String replyWriteFrm(Model model, int boardNo) {
-//		BoardVO reply = service.replyInfo(boardNo);
-//		model.addAttribute("reply", reply);
-//		model.addAttribute("boardNo", boardNo);
+	public String replyWriteFrm(Model model, int boardNo, BoardData data) {
+		model.addAttribute("data", data);
 		model.addAttribute("boardNo", boardNo);
 		return "board/replyWrite";
 	}
 	
 	@RequestMapping(value="/replyWrite.do")
-	public String replyWrite(BoardVO boardVo) {
-		System.out.println(boardVo);
+	public String replyWrite(BoardVO boardVo, BoardData boardData, HttpServletRequest request) {
 		int result = service.replyInsert(boardVo);
 		if (result == 1) {
 			System.out.println("글쓰기 성공");
+			
 		} else {
 			System.out.println("글쓰기 실패");
 		}
-		return "redirect:/bw/board/boardList.do";
+		BoardData data = service.selectBoardList(boardData.getReqPage(), boardData.getType(), boardData.getKeyword());
+		//return "redirect:/bw/board/boardList.do?reqPage"+ reqPage + "type=" + ${type} + "&keyword=" + ${keyword};
+		request.setAttribute("list", data.getList());
+		request.setAttribute("pageNavi", data.getPageNavi());
+		request.setAttribute("reqPage", boardData.getReqPage());
+		request.setAttribute("type", boardData.getType());
+		request.setAttribute("keyword", boardData.getKeyword());
+		request.setAttribute("totalPage", data.getTotalPage());
+		request.setAttribute("totalCount", data.getTotalCount());
+		request.setAttribute("numPerPage", data.getNumPerPage());
+		return "redirect:/bw/board/boardList.do?" + boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
 	}
 	
 	@ResponseBody

@@ -13,6 +13,7 @@ import kr.co.bw.board.model.dao.BoardDaoImpl;
 import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
 import kr.co.bw.board.model.vo.BoardVO;
+import kr.co.bw.board.model.vo.BoardVO2;
 import kr.co.bw.board.model.vo.BoardViewData;
 import utils.ExcelRead;
 import utils.ExcelReadOption;
@@ -123,7 +124,7 @@ public class BoardServiceImpl {
 		return dao.boardDelete(boardVo);
 	}
 
-	public int boardWirte(BoardVO boardVo) {
+	public int boardWirte(BoardVO2 boardVo) {
 		// TODO Auto-generated method stub
 		return dao.boardWrite(boardVo);
 	}

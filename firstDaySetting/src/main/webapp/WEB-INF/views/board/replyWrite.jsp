@@ -66,6 +66,9 @@
 					</tr>
 				</table>
 				<input type="hidden" name="boardRef" id="boardRef" value="${boardNo }">
+				<input type="hidden" name="keyword" id="keyword" value="${data.keyword }">
+				<input type="hidden" name="type" id="type" value="${data.type }">
+				<input type="hidden" name="reqPage" id="reqPage" value="${data.reqPage }">
 			</form>
 			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>

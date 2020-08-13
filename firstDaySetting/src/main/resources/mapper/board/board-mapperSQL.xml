@@ -190,4 +190,17 @@
   		)
   		</foreach>
   	</insert>
+  	<select id="checkRefBeing" parameterType="board" resultType="board">
+  		select board_no from board where board_ref = #{boardNo}
+  	</select>
+  	<update id="boardDeleteUpdate" parameterType="board">
+  		update board
+  		set 
+  			board_title = '삭제된 글입니다.'
+  			, board_content = '.'
+  			, board_writer = '.'
+  			, board_filename = ''
+  			, board_pw = '123123!a'
+  		where board_no = #{boardNo}
+  	</update>
 </mapper>

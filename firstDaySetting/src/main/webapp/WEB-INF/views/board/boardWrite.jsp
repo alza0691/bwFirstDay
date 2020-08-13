@@ -65,13 +65,14 @@
 	                    <td>
 	                    	<span id="showName">${boardVo.filename }</span>
 <!-- 	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;"> -->
-								<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]">
+								<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]" accept=".jpg, .jpeg, .png, .gif, .bmp">
 	                    </td>
 	                </tr>
 	                <tr>
 						<td>
 							<button type="button" id='button'>파일찾기</button>
 							<button type="button" id="deleteButton">파일삭제</button>
+							<span>5MB 이하의 .jpg, .jpeg, .png, .gif, .bmp 파일만 가능합니다.</span>
 						</td>
 					</tr>
 					<tr>
@@ -217,9 +218,23 @@
 				$("input[type='file']").trigger('click');
 			});
 			$("input[type='file']").change(function(){
-				$('#showName').text(this.value.replace(/C:\\fakepath\\/i, ''));
-				console.log($("#uploadfile").val());
+				var fileInput = $("input[type='file']");
+				var files = fileInput.files;
+				var size = fileInput[0].files[0].size;
+				var file;
+				if(size > 625000){
+					alert("파일사이즈를 5MB 이하로 업로드 해주세요");
+					$('#showName').text("");
+				} else{
+					for (var i = 0; i < fileInput.length; i++) {
+		                file = files[i];
+		                console.log(file.name);
+		            }
+					$('#showName').text(this.value.replace(/C:\\fakepath\\/i, ''));
+					console.log($("#uploadfile").val());
+				}
 			});
+			
 		});
 		
 		

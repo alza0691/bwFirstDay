@@ -114,5 +114,15 @@ public class BoardDaoImpl {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("board.insertExcel", paramMap);
 	}
+
+	public List<BoardVO> checkRefBeing(BoardVO boardVo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.checkRefBeing", boardVo);
+	}
+
+	public int boardDeleteUpdate(BoardVO boardVo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("board.boardDeleteUpdate", boardVo);
+	}
 	
 }

@@ -119,8 +119,16 @@ public class BoardServiceImpl {
 	}
 
 	public int boardDelete(BoardVO boardVo) {
-		// TODO Auto-generated method stub
-		return dao.boardDelete(boardVo);
+		List<BoardVO> check = dao.checkRefBeing(boardVo);
+		System.out.println(check.size());
+		System.out.println("check.size : " +check.size());
+		if (check.size() == 0) {
+			int delete = dao.boardDelete(boardVo);
+			return delete;
+		} else {
+			int update = dao.boardDeleteUpdate(boardVo);
+			return update;
+		}
 	}
 
 	public int boardWirte(BoardVO boardVo) {

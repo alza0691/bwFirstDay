@@ -307,6 +307,7 @@ public class BoardController {
 	@RequestMapping(value="boardUpdateFrm.do")
 	public String boardUpdateFrm(Model model, int boardNo) {
 		BoardVO boardVo = service.boardUpdateFrm(boardNo);
+		if(boardVo.getFilename() != null) {
 		String filename = boardVo.getFilename();
 		String[] arr = filename.split("\\*");
 		try {
@@ -322,6 +323,7 @@ public class BoardController {
 			boardVo.setShowFilename3(arr[2].substring(arr[2].indexOf('_')+1));
 		} catch(IndexOutOfBoundsException e) {
 			System.out.println(e);
+		}
 		}
 		model.addAttribute("boardVo", boardVo);
 		return "board/boardUpdate";

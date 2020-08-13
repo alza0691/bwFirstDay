@@ -63,7 +63,9 @@
 	                <tr>
 	                    <td class="right" rowspan='2'>첨부파일</td>
 	                    <td>
-	                    	<span id="showName">${boardVo.filename }</span>
+	                    	<span id="showName1">${boardVo.showFilename1 }</span><br>
+	                    	<span id="showName2">${boardVo.showFilename2 }</span><br>
+	                    	<span id="showName3">${boardVo.showFilename3 }</span>
 <!-- 	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;"> -->
 								<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]" accept=".jpg, .jpeg, .png, .gif, .bmp">
 	                    </td>
@@ -221,17 +223,17 @@
 				var fileInput = $("input[type='file']");
 				var files = fileInput.files;
 				var size = fileInput[0].files[0].size;
-				var file;
+				var arr = new Array;
 				if(size > 625000){
 					alert("파일사이즈를 5MB 이하로 업로드 해주세요");
 					$('#showName').text("");
 				} else{
-					for (var i = 0; i < fileInput.length; i++) {
-		                file = files[i];
-		                console.log(file.name);
+					for (var i = 0; i < fileInput.length+1; i++) {
+						arr.push(fileInput[0].files[i].name);
 		            }
-					$('#showName').text(this.value.replace(/C:\\fakepath\\/i, ''));
-					console.log($("#uploadfile").val());
+					$('#showName1').text(arr[0]);
+					$('#showName2').text(arr[1]);
+					$('#showName3').text(arr[2]);
 				}
 			});
 			

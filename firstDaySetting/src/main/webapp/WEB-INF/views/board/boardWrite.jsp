@@ -30,7 +30,9 @@
     .right{
     	text-align: right;
     }
-    
+    #uploadfile{
+    	display: none;
+    }
 </style>
 <body>
 	<section>
@@ -63,9 +65,9 @@
 	                <tr>
 	                    <td class="right" rowspan='2'>첨부파일</td>
 	                    <td>
-	                    	<span id="showName1">${boardVo.showFilename1 }</span><br>
-	                    	<span id="showName2">${boardVo.showFilename2 }</span><br>
-	                    	<span id="showName3">${boardVo.showFilename3 }</span>
+	                    	<span id="showName1" class="showName">${boardVo.showFilename1 }</span><br>
+	                    	<span id="showName2" class="showName">${boardVo.showFilename2 }</span><br>
+	                    	<span id="showName3" class="showName">${boardVo.showFilename3 }</span>
 <!-- 	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;"> -->
 								<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]" accept=".jpg, .jpeg, .png, .gif, .bmp">
 	                    </td>
@@ -74,7 +76,7 @@
 						<td>
 							<button type="button" id='button'>파일찾기</button>
 							<button type="button" id="deleteButton">파일삭제</button>
-							<span>5MB 이하의 .jpg, .jpeg, .png, .gif, .bmp 파일만 가능합니다.</span>
+							<span>5MB 이하의 .jpg, .jpeg, .png, .gif, .bmp 파일만 가능합니다. (총 3개)</span>
 						</td>
 					</tr>
 					<tr>
@@ -115,6 +117,10 @@
 			$(".return").click(function(){
 				location.href="/bw/board/boardList.do";
 			});
+		});
+		$(document).ready(function() {
+		    var fileInput = document.getElementById("uploadfile");
+			console.log(fileInput.value);
 		});
 
 		$(function(){
@@ -209,7 +215,7 @@
 			    $('#counter').html(content.length);	
 			});
 			$("#deleteButton").click(function(){
-				$("#showName").html("");
+				$(".showName").html("");
 				if ($.browser.msie) { // ie 일때  input[type=file] init. 
 					$("#uploadfile").replaceWith( $("#uploadfile").clone(true) ); 
 				} else { // other browser 일때 input[type=file] init. 
@@ -218,23 +224,53 @@
 			});
 			$('#button').click(function(){
 				$("input[type='file']").trigger('click');
+				
 			});
 			$("input[type='file']").change(function(){
-				var fileInput = $("input[type='file']");
+				$('#showName1').text("");
+				$('#showName2').text("");
+				$('#showName3').text("");
+				var fileInput = document.getElementById("uploadfile");
 				var files = fileInput.files;
-				var size = fileInput[0].files[0].size;
-				var arr = new Array;
-				if(size > 625000){
-					alert("파일사이즈를 5MB 이하로 업로드 해주세요");
-					$('#showName').text("");
-				} else{
-					for (var i = 0; i < fileInput.length+1; i++) {
-						arr.push(fileInput[0].files[i].name);
+ 				var fileSize = new Array;
+ 				var browser=navigator.appName;
+ 				var arr = new Array;
+ 				
+ 				if (browser=="Microsoft Internet Explorer"){
+ 					var oas = new ActiveXObject("Scripting.FileSystemObject");
+ 					fileSize = oas.getFile( fileInput.value ).size;
+ 				} else{
+ 					for(var i = 0; i < files.length; i++){
+ 						fileSize.push(fileInput.files[i].size);
+ 					}
+ 				}
+ 				
+ 				if(files.length > 3){
+ 					alert("파일은 3개까지 첨부할 수 있습니다.");
+ 					$("#uploadfile").val(""); 
+ 					$('#showName1').text("");
+ 					$('#showName2').text("");
+ 					$('#showName3').text("");
+ 				}
+ 				
+ 				
+ 				for(var i = 0; i < files.length; i++){
+ 					if(fileSize[i] > 625000){
+ 						alert("파일사이즈를 5MB 이하로 업로드 해주세요");
+ 						$("#uploadfile").val(""); 
+ 						$('#showName1').text("");
+ 						$('#showName2').text("");
+ 						$('#showName3').text("");
+ 					} else{
+ 						for (var i = 0; i < files.length; i++) {
+						arr.push(fileInput.files[i].name);
 		            }
 					$('#showName1').text(arr[0]);
 					$('#showName2').text(arr[1]);
 					$('#showName3').text(arr[2]);
-				}
+					break;
+					}
+ 				}
 			});
 			
 		});

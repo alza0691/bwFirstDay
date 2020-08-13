@@ -119,7 +119,7 @@
 				<input type="hidden" name="filepath" value="${b.filepath }">
 				<input type="hidden" id="boardContent2" value="${b.boardContent }">
 				<input type="hidden" name="boardNo" id="boardNo" value="${b.boardNo }">
-				<button type="button" class="update">수정</button>
+				<button onclick="update('${b.boardNo }', '${paging.type }', '${paging.keyword }', ${paging.reqPage })">수정</button>
 				<button type="button" class="delete">삭제</button>
 				<button type="button" class="return">목록으로</button>
 				<button type="button" class="reply" onclick="replyWrite('${b.boardNo}', '${paging.reqPage }', '${paging.type }', '${paging.keyword }' )">답글달기</button>
@@ -187,7 +187,56 @@ function fileDownload(filename, filepath) {
     
     location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
 }
-
+function update(boardNo, type, keyword, reqPage){
+	$.ajax({
+		url: "/bw/board/pwCheck.do",
+		data:{
+			boardPw:$("#boardPw").val(),
+			boardNo:$("#boardNo").val()
+			},
+		type: "get",
+		success: function(data){
+			if (data == '1') {
+                var form = document.createElement("form");
+            	form.setAttribute("mothod", "post");
+            	form.setAttribute("action", "/bw/board/boardUpdateFrm.do");
+            	
+            	var hiddenInput = document.createElement("input");
+            	hiddenInput.setAttribute("type", "hidden");
+            	hiddenInput.setAttribute("name", "type");
+            	hiddenInput.setAttribute("value", type);
+            	form.appendChild(hiddenInput);
+            	
+            	var hiddenInput = document.createElement("input");
+            	hiddenInput.setAttribute("type", "hidden");
+            	hiddenInput.setAttribute("name", "keyword");
+            	hiddenInput.setAttribute("value", keyword);
+            	form.appendChild(hiddenInput);
+            	
+            	var hiddenInput = document.createElement("input");
+            	hiddenInput.setAttribute("type", "hidden");
+            	hiddenInput.setAttribute("name", "boardNo");
+            	hiddenInput.setAttribute("value", boardNo);
+            	form.appendChild(hiddenInput);
+            	
+            	var hiddenInput = document.createElement("input");
+            	hiddenInput.setAttribute("type", "hidden");
+            	hiddenInput.setAttribute("name", "reqPage");
+            	hiddenInput.setAttribute("value", reqPage);
+            	form.appendChild(hiddenInput);
+            	
+            	document.body.appendChild(form);
+            	form.submit();
+            } else {
+                alert('비밀번호를 확인해 주세요');
+                $("#boardPw").val("").focus();
+            }
+		},
+		error: function(){
+			alert("관리자에게 문의해주세요")
+		}
+	});
+}
 
 	$(document).ready(function() {
 		var autosize = $(".autosize"); 
@@ -207,7 +256,7 @@ function fileDownload(filename, filepath) {
 				type: "get",
 				success: function(data){
 					if (data == '1') {
-                        location.href="/bw/board/boardUpdateFrm.do?boardNo="+${b.boardNo}+"&filename=${b.filename}";
+                        location.href="/bw/board/boardUpdateFrm.do?boardNo="+${b.boardNo}+"&filename=${b.filename}&reqPage=" + ${paging.reqPage }+ "&type=${paging.type}&keyword=${paging.keyword}";
                     } else {
                         alert('비밀번호를 확인해 주세요');
                         $("#boardPw").val("").focus();

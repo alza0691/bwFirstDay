@@ -200,6 +200,7 @@ public class BoardController {
 	
 	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST)
 	public String boardWrite(BoardVO boardVo, @RequestParam("uploadfile[]") MultipartFile[] uploadfile) {
+		System.out.println(uploadfile);
 		boardVo.setFilename(saveFile(uploadfile));
 			
 	    if(boardVo.getFilename()==null) {
@@ -218,7 +219,7 @@ public class BoardController {
 	
 	private String saveFile(@RequestParam("uploadfile[]") MultipartFile[] file){
 		String multifileName = "";
-		if(file.length != 0) {
+		if(file[0].getSize() != 0) {
 			for(int i = 0; i < file.length; i++) {
 			    UUID uuid = UUID.randomUUID();
 			    String saveName = uuid + "_" + file[i].getOriginalFilename();
@@ -269,20 +270,21 @@ public class BoardController {
 //	}
 	
 	@RequestMapping(value = "/boardUpdate.do", method = RequestMethod.POST)
-	public String boardUpdate(BoardVO boardVo, MultipartFile[] uploadfile){
+	public String boardUpdate(BoardVO boardVo, @RequestParam("uploadfile[]") MultipartFile[] uploadfile, BoardData boardData){
 	    boardVo.setFilename(saveFile(uploadfile));
 	    if(boardVo.getFilename()==null) {
 	    	boardVo.setFilepath(null);
 	    } else {
 	    	boardVo.setFilepath(UPLOAD_PATH);
 	    }
+	    System.out.println(boardData);
 		int result = service.boardUpdate(boardVo);
 		if (result == 1) {
 			System.out.println("수정성공");
-		return "redirect:/bw/board/contentPage.do?boardNo="+boardVo.getBoardNo();
+		return "redirect:/bw/board/contentPage.do?boardNo="+boardVo.getBoardNo()+ "&reqPage="+ boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
 		} else {
 			System.out.println("수정실패");
-		return "redirect:/bw/board/boardUpdateFrm.do?boardNo="+boardVo.getBoardNo();
+		return "redirect:/bw/board/boardUpdateFrm.do?boardNo="+boardVo.getBoardNo()+ "&reqPage="+ boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
 		}
 	}
 	
@@ -305,7 +307,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="boardUpdateFrm.do")
-	public String boardUpdateFrm(Model model, int boardNo) {
+	public String boardUpdateFrm(Model model, int boardNo, BoardData data) {
 		BoardVO boardVo = service.boardUpdateFrm(boardNo);
 		if(boardVo.getFilename() != null) {
 		String filename = boardVo.getFilename();
@@ -326,6 +328,7 @@ public class BoardController {
 		}
 		}
 		model.addAttribute("boardVo", boardVo);
+		model.addAttribute("data", data);
 		return "board/boardUpdate";
 	}
 
@@ -398,7 +401,7 @@ public class BoardController {
 		request.setAttribute("totalPage", data.getTotalPage());
 		request.setAttribute("totalCount", data.getTotalCount());
 		request.setAttribute("numPerPage", data.getNumPerPage());
-		return "redirect:/bw/board/boardList.do?" + boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
+		return "redirect:/bw/board/boardList.do?reqPage=" + boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
 	}
 	
 	@ResponseBody
@@ -452,25 +455,25 @@ public class BoardController {
 		return "board/excelUpload";
 	}
 	
-	@ResponseBody
-	@RequestMapping(value="/excelUp.do", method = RequestMethod.POST)
-	public Map<String, Object> excelUp(MultipartFile testFile, MultipartHttpServletRequest request) {
-		MultipartFile excelFile = request.getFile("excelFile");
-		if(excelFile == null || excelFile.isEmpty()) {
-			throw new RuntimeException("엑셀파일을 선택해 주세요");
-		}
-		File destFile = new File("C:\\Users\\lance\\Desktop\\" + excelFile.getOriginalFilename());
-		
-		try {
-			excelFile.transferTo(destFile);
-		} catch(Exception e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-		Map<String, Object> result = service.ExcelUpload(destFile);
-		destFile.delete();
-		
-		return result;
-	}
+//	@ResponseBody
+//	@RequestMapping(value="/excelUp.do", method = RequestMethod.POST)
+//	public Map<String, Object> excelUp(MultipartFile testFile, MultipartHttpServletRequest request) {
+//		MultipartFile excelFile = request.getFile("excelFile");
+//		if(excelFile == null || excelFile.isEmpty()) {
+//			throw new RuntimeException("엑셀파일을 선택해 주세요");
+//		}
+//		File destFile = new File("C:\\Users\\lance\\Desktop\\" + excelFile.getOriginalFilename());
+//		
+//		try {
+//			excelFile.transferTo(destFile);
+//		} catch(Exception e) {
+//			throw new RuntimeException(e.getMessage(),e);
+//		}
+//		Map<String, Object> result = service.ExcelUpload(destFile);
+//		destFile.delete();
+//		
+//		return result;
+//	}
 
 }
 

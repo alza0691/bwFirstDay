@@ -101,7 +101,10 @@
 					<tr>
 						<td style="text-align: right;">첨부파일</td>
 					<td>
-                    	<a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">${b.showFilename }</a>
+<%-- 						<a href="javascript:fileDownload('${b.filename }', '${b.filepath }')">전체다운로드</a><br> --%>
+                    	<a href="javascript:fileDownload('${b.filename1 }', '${b.filepath }')">${b.showFilename1 }</a><br>
+                    	<a href="javascript:fileDownload('${b.filename2 }', '${b.filepath }')">${b.showFilename2 }</a><br>
+                    	<a href="javascript:fileDownload('${b.filename3 }', '${b.filepath }')">${b.showFilename3 }</a>
                     </td>
 					</tr> 
 					<tr>
@@ -191,6 +194,7 @@ function fileDownload(filename, filepath) {
 		var size = autosize.prop('scrollHeight');
 		autosize.css("height",size);
 	});
+	
 	var boardPw = $("#boardPw");
 	$(function(){
 		$(".update").click(function(){
@@ -203,7 +207,7 @@ function fileDownload(filename, filepath) {
 				type: "get",
 				success: function(data){
 					if (data == '1') {
-                        location.href="/bw/board/boardUpdateFrm.do?boardNo="+${b.boardNo};
+                        location.href="/bw/board/boardUpdateFrm.do?boardNo="+${b.boardNo}+"&filename=${b.filename}";
                     } else {
                         alert('비밀번호를 확인해 주세요');
                         $("#boardPw").val("").focus();

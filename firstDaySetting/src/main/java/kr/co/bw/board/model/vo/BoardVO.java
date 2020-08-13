@@ -1,7 +1,5 @@
 package kr.co.bw.board.model.vo;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class BoardVO {
 
 	private int boardNo;
@@ -17,12 +15,11 @@ public class BoardVO {
 	private int boardRef;
 	private String filepath;
 	private String filename;
-	private String showFilename;
-
-	
+	private String filename1;
 	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
 			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef,
-			String filepath, String filename, MultipartFile mp) {
+			String filepath, String filename, String filename1, String filename2, String filename3,
+			String showFilename1, String showFilename2, String showFilename3) {
 		super();
 		this.boardNo = boardNo;
 		this.boardTitle = boardTitle;
@@ -37,7 +34,19 @@ public class BoardVO {
 		this.boardRef = boardRef;
 		this.filepath = filepath;
 		this.filename = filename;
+		this.filename1 = filename1;
+		this.filename2 = filename2;
+		this.filename3 = filename3;
+		this.showFilename1 = showFilename1;
+		this.showFilename2 = showFilename2;
+		this.showFilename3 = showFilename3;
 	}
+	private String filename2;
+	private String filename3;
+	private String showFilename1;
+	private String showFilename2;
+	private String showFilename3;
+
 
 	public int getBoardNo() {
 		return boardNo;
@@ -117,30 +126,41 @@ public class BoardVO {
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
-	public String getShowFilename() {
-		return showFilename;
+	public String getFilename2() {
+		return filename2;
 	}
-	public void setShowFilename(String showFilename) {
-		this.showFilename = showFilename;
+	public void setFilename2(String filename2) {
+		this.filename2 = filename2;
 	}
-	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
-			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef,
-			String filepath, String filename, String showFilename) {
-		super();
-		this.boardNo = boardNo;
-		this.boardTitle = boardTitle;
-		this.boardContent = boardContent;
-		this.boardWriter = boardWriter;
-		this.boardDate = boardDate;
-		this.boardPw = boardPw;
-		this.type = type;
-		this.keyword = keyword;
-		this.commentCount = commentCount;
-		this.boardLevel = boardLevel;
-		this.boardRef = boardRef;
-		this.filepath = filepath;
-		this.filename = filename;
-		this.showFilename = showFilename;
+	public String getFilename3() {
+		return filename3;
+	}
+	public void setFilename3(String filename3) {
+		this.filename3 = filename3;
+	}
+	public String getShowFilename1() {
+		return showFilename1;
+	}
+	public void setShowFilename1(String showFilename1) {
+		this.showFilename1 = showFilename1;
+	}
+	public String getShowFilename2() {
+		return showFilename2;
+	}
+	public void setShowFilename2(String showFilename2) {
+		this.showFilename2 = showFilename2;
+	}
+	public String getShowFilename3() {
+		return showFilename3;
+	}
+	public void setShowFilename3(String showFilename3) {
+		this.showFilename3 = showFilename3;
+	}
+	public String getFilename1() {
+		return filename1;
+	}
+	public void setFilename1(String filename1) {
+		this.filename1 = filename1;
 	}
 	public BoardVO() {
 		super();

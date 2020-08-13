@@ -162,6 +162,12 @@
 	</section>
 </body>
 <script>
+function fileDownload(filename, filepath) {
+	var newFilename = encodeURIComponent(filename);
+    var newFilepath = encodeURIComponent(filepath);
+    
+    location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
+}
 	function pageMove(boardNo, type, keyword, reqPage){
 		var form = document.createElement("form");
 		form.setAttribute("mothod", "post");

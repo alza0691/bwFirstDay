@@ -70,8 +70,13 @@
 					<tr>
 						<td class="right" rowspan='2'>첨부파일</td>
 						<td>
-							<span id="showName">${boardVo.filename }</span>
-							<input type="file" id="uploadfile" name="uploadfile" class="fileButton" style="width:0%; float: left;" >
+<%-- 							<span id="showName">${boardVo.showFilename1 }</span><br> --%>
+<%-- 							<span id="showName">${boardVo.showFilename2 }</span><br> --%>
+<%-- 							<span id="showName">${boardVo.showFilename3 }</span> --%>
+							<a href="javascript:fileDownload('${boardVo.filename1 }', '${boardVo.filepath }')"><span id="showName">${boardVo.showFilename1 }</span></a><br>
+                    		<a href="javascript:fileDownload('${boardVo.filename2 }', '${boardVo.filepath }')"><span>${boardVo.showFilename2 }</span></a><br>
+                    		<a href="javascript:fileDownload('${boardVo.filename3 }', '${boardVo.filepath }')"><span>${boardVo.showFilename3 }</span></a>
+							<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]">
 						</td>
 					</tr>
 					<tr>
@@ -91,12 +96,12 @@
 	</section>	
 </body>
 <script>
-// function fileDownload(filename, filepath) {
-// 	var newFilename = encodeURIComponent(filename);
-//     var newFilepath = encodeURIComponent(filepath);
+function fileDownload(filename, filepath) {
+	var newFilename = encodeURIComponent(filename);
+    var newFilepath = encodeURIComponent(filepath);
     
-//     location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
-// }
+    location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
+}
 	$(document).ready(function() {
 		var autosize = $(".autosize"); 
 		var size = autosize.prop('scrollHeight');

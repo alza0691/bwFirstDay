@@ -13,7 +13,6 @@ import kr.co.bw.board.model.dao.BoardDaoImpl;
 import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
 import kr.co.bw.board.model.vo.BoardVO;
-import kr.co.bw.board.model.vo.BoardVO2;
 import kr.co.bw.board.model.vo.BoardViewData;
 import utils.ExcelRead;
 import utils.ExcelReadOption;
@@ -124,7 +123,7 @@ public class BoardServiceImpl {
 		return dao.boardDelete(boardVo);
 	}
 
-	public int boardWirte(BoardVO2 boardVo) {
+	public int boardWirte(BoardVO boardVo) {
 		// TODO Auto-generated method stub
 		return dao.boardWrite(boardVo);
 	}
@@ -155,7 +154,21 @@ public class BoardServiceImpl {
 		if (selectBoard.getFilename() != null) {
 			System.out.println("selectedBoard name : " + selectBoard.getFilename());
 			String name = selectBoard.getFilename();
-			selectBoard.setShowFilename(name.substring(name.indexOf('_')+1));
+			String[] arr = name.split("\\*");
+			try {
+			selectBoard.setFilename1(arr[0]);
+			selectBoard.setFilename2(arr[1]);
+			selectBoard.setFilename3(arr[2]);
+			} catch(IndexOutOfBoundsException e) {
+				System.out.println(e);
+			}
+			try {
+			selectBoard.setShowFilename1(arr[0].substring(arr[0].indexOf('_')+1));
+			selectBoard.setShowFilename2(arr[1].substring(arr[1].indexOf('_')+1));
+			selectBoard.setShowFilename3(arr[2].substring(arr[2].indexOf('_')+1));
+			} catch(IndexOutOfBoundsException e){
+				System.out.println(e);
+			}
 		}
 		
 		BoardViewData data = new BoardViewData();

@@ -11,4 +11,7 @@ public class BoardData {
 	private int totalPage;
 	private int totalCount;
 	private int numPerPage;
+	private String keyword;
+	private String type;
+	private int reqPage;
 }

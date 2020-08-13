@@ -84,10 +84,12 @@
 		<div class="container">
 		<h1>리스트</h1>
 		<span><a href="/bw/board/boardWriteFrm.do">글쓰기</a></span>
+<!-- 		<span><a href="/bw/board/excelUpFrm.do">엑셀 업로드</a></span> -->
 			<table>
 				<tr>
 					<td width="10%">번호</td>
 					<td width="50%">제목</td>
+					<td width="30px"><img width="20px;"src="/resources/img/pngegg.png"></td>
 					<td width="20%">글쓴이</td>
 					<td width="30%">날짜</td>
                 </tr>
@@ -96,7 +98,20 @@
 				<c:forEach items="${list}" var="list" varStatus="status">
                 	<tr>
 	                	<td>${num}</td>
-	                	<td class="title" style="text-align: left;"><p><a href="/bw/board/contentPage.do?boardNo=${list.boardNo }">${list.boardTitle2 }</a></p></td>
+	                	<td class="title" style="text-align: left;">
+		                	<p>
+		                		<c:forEach begin="2" end="${list.boardLevel }" >
+		                			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                		</c:forEach>
+<%-- 		                		<a href="/bw/board/contentPage.do?boardNo=${list.boardNo }">  --%>
+		                		<a href="javascript:void(0)" onclick="pageMove('${list.boardNo }', '${type }', '${keyword }', ${reqPage })">
+		                		${list.boardTitle2 }
+		                				<c:if test="${list.commentCount != 0}">(${list.commentCount })</c:if></a>
+<!-- 		                			</a> -->
+		                			
+		                	</p>
+	                	</td>
+	                	<td><c:if test="${list.filename != null }"><img width="20px;"src="/resources/img/pngegg.png"></c:if></td>
 	                	<td>${list.boardWriter2 }</td>
 	                	<td>${list.boardDate }</td>
 	                </tr>
@@ -109,7 +124,7 @@
 		<div class="wrapper">
 		<form action="/bw/board/boardList.do" method="get">
 				<input type="hidden" name="reqPage" value="1">
-					<select name="type" class="input">
+					<select name="type" class="input" id="type">
 						<c:choose>
 							<c:when test="${type eq 'boardTitle' }">
 								<option value="boardTitle" selected>제목</option>
@@ -128,6 +143,7 @@
 				<input type="text" name="keyword" class="input" value="${keyword }">
 				<input type="submit" value="검색" class="input">
 		</form>
+		<form action="/bw/obard/contentPage.do" method="post"></form>
 		</div>
 		</div>
 		<div class="paging">
@@ -146,6 +162,43 @@
 	</section>
 </body>
 <script>
-
+function fileDownload(filename, filepath) {
+	var newFilename = encodeURIComponent(filename);
+    var newFilepath = encodeURIComponent(filepath);
+    
+    location.href = "/bw/board/download.do?filename=" + newFilename + "&filepath=" + newFilepath;
+}
+	function pageMove(boardNo, type, keyword, reqPage){
+		var form = document.createElement("form");
+		form.setAttribute("mothod", "post");
+		form.setAttribute("action", "/bw/board/contentPage.do");
+		
+		var hiddenInput = document.createElement("input");
+		hiddenInput.setAttribute("type", "hidden");
+		hiddenInput.setAttribute("name", "type");
+		hiddenInput.setAttribute("value", type);
+		form.appendChild(hiddenInput);
+		
+		var hiddenInput = document.createElement("input");
+		hiddenInput.setAttribute("type", "hidden");
+		hiddenInput.setAttribute("name", "keyword");
+		hiddenInput.setAttribute("value", keyword);
+		form.appendChild(hiddenInput);
+		
+		var hiddenInput = document.createElement("input");
+		hiddenInput.setAttribute("type", "hidden");
+		hiddenInput.setAttribute("name", "boardNo");
+		hiddenInput.setAttribute("value", boardNo);
+		form.appendChild(hiddenInput);
+		
+		var hiddenInput = document.createElement("input");
+		hiddenInput.setAttribute("type", "hidden");
+		hiddenInput.setAttribute("name", "reqPage");
+		hiddenInput.setAttribute("value", reqPage);
+		form.appendChild(hiddenInput);
+		
+		document.body.appendChild(form);
+		form.submit();
+	}
 </script>
 </html>

@@ -1,22 +1,28 @@
 package kr.co.bw.board.model.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.co.bw.board.model.dao.BoardDaoImpl;
+import kr.co.bw.board.model.vo.BoardCommentVO;
 import kr.co.bw.board.model.vo.BoardData;
 import kr.co.bw.board.model.vo.BoardVO;
+import kr.co.bw.board.model.vo.BoardViewData;
+import utils.ExcelRead;
+import utils.ExcelReadOption;
 
 @Service("boardService")
 public class BoardServiceImpl {
 	@Autowired
 	@Qualifier("boardDao")
 	private BoardDaoImpl dao;
-
+	
 	public BoardData selectBoardList(int reqPage, String type, String keyword) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("type", type);
@@ -46,7 +52,7 @@ public class BoardServiceImpl {
 		
 		//해당 페이지의 게시물들 조회
 		List<BoardVO> list = dao.selectMapperInfo(map);
-		
+				
 		System.out.println("totalPage = " + totalPage);
 		System.out.println("start = " + start);
 		System.out.println("end = " + end);
@@ -137,4 +143,104 @@ public class BoardServiceImpl {
 		return dao.pwCheck(boardVo);
 	}
 	
+	public int boardCommentInsert(BoardCommentVO comment) {
+		// TODO Auto-generated method stub
+		return dao.boardCommentInsert(comment);
+	}
+
+	public BoardViewData boardCommentList(int boardNo) {
+		BoardVO selectBoard = dao.selectOneBoard(boardNo);
+		List<BoardCommentVO> selectCommentList = dao.selectCommentList(boardNo);
+		if (selectBoard.getFilename() != null) {
+			System.out.println("selectedBoard name : " + selectBoard.getFilename());
+			String name = selectBoard.getFilename();
+			String[] arr = name.split("\\*");
+			try {
+			selectBoard.setFilename1(arr[0]);
+			selectBoard.setFilename2(arr[1]);
+			selectBoard.setFilename3(arr[2]);
+			} catch(IndexOutOfBoundsException e) {
+				System.out.println(e);
+			}
+			try {
+			selectBoard.setShowFilename1(arr[0].substring(arr[0].indexOf('_')+1));
+			selectBoard.setShowFilename2(arr[1].substring(arr[1].indexOf('_')+1));
+			selectBoard.setShowFilename3(arr[2].substring(arr[2].indexOf('_')+1));
+			} catch(IndexOutOfBoundsException e){
+				System.out.println(e);
+			}
+		}
+		
+		BoardViewData data = new BoardViewData();
+		data.setB(selectBoard);
+		data.setCommentList(selectCommentList);
+		
+		return data;
+	}
+
+	public int replyInsert(BoardVO boardVo) {
+		// TODO Auto-generated method stub
+		return dao.replyInsert(boardVo);
+	}
+
+	public BoardCommentVO boardOneComment(int boardNo) {
+		// TODO Auto-generated method stub
+		return dao.boardOneComment(boardNo);
+	}
+
+	public BoardCommentVO commentPwCheck(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return dao.commentPwCheck(bcv);
+	}
+
+	public int deleteComment(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return dao.deleteComment(bcv);
+	}
+
+	public int modifyComment(BoardCommentVO bcv) {
+		// TODO Auto-generated method stub
+		return dao.modifyComment(bcv);
+	}
+
+	public BoardVO replyInfo(int boardNo) {
+		// TODO Auto-generated method stub
+		return dao.selectReply(boardNo);
+	}
+
+	public int deleteFile(int boardNo) {
+		// TODO Auto-generated method stub
+		return dao.deleteFile(boardNo);
+	}
+
+	public Map<String, Object> ExcelUpload(File destFile) {
+		ExcelReadOption excelReadOption = new ExcelReadOption();
+		excelReadOption.setFilePath(destFile.getAbsolutePath());
+//		excelReadOption.setOutputColumns("a", "b", "c");
+		excelReadOption.setStartRow(2);
+		
+		List<Map<String, String>> excelContent = ExcelRead.read(excelReadOption);
+		
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("excelContent", excelContent);
+		System.out.println(excelContent);
+		
+		try {
+			dao.insertExcel(paramMap);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return paramMap;
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+

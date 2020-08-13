@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>글쓰기</title>
+<title>답글쓰기</title>
 </head>
 <style>
 	section{
@@ -35,8 +35,8 @@
 <body>
 	<section>
 		<div class="container">
-		<h1>글쓰기</h1>
-			<form class="boardWrite" action="/bw/board/boardWrite.do" method="post" id="form" enctype="multipart/form-data">
+		<h1>답글쓰기</h1>
+			<form action="/bw/board/replyWrite.do" method="post" id="form">
 				<table>
 					<tr>
 						<td width="12%" class="right">날짜</td>
@@ -60,33 +60,21 @@
 							<span id="counter">0</span>/1000
 						</td>
 					</tr>
-	                <tr>
-	                    <td class="right" rowspan='2'>첨부파일</td>
-	                    <td>
-	                    	<span id="showName">${boardVo.filename }</span>
-<!-- 	                        <input type="file" name="uploadfile" placeholder="파일 선택" id="uploadfile" style="width:0%; float: left;"> -->
-								<input multiple="multiple" type="file" id="uploadfile" name="uploadfile[]">
-	                    </td>
-	                </tr>
-	                <tr>
-						<td>
-							<button type="button" id='button'>파일찾기</button>
-							<button type="button" id="deleteButton">파일삭제</button>
-						</td>
-					</tr>
 					<tr>
 						<td class="right">비밀번호</td>
 						<td><input type="password" name="boardPw" id="boardPw" required placeholder="숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요."></td>
 					</tr>
 				</table>
+				<input type="hidden" name="boardRef" id="boardRef" value="${boardNo }">
+				<input type="hidden" name="keyword" id="keyword" value="${data.keyword }">
+				<input type="hidden" name="type" id="type" value="${data.type }">
+				<input type="hidden" name="reqPage" id="reqPage" value="${data.reqPage }">
 			</form>
 			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>
+			<button type="button" class="button back" style="width: 70px; margin-left: 10px;">본문으로</button>
 		</div>
 	</section>	
-
-	
-	<br><br><br><br>
 </body>
 	<script>
 	$(".autosize").on("keyup", function() {
@@ -111,6 +99,11 @@
 		$(function(){
 			$(".return").click(function(){
 				location.href="/bw/board/boardList.do";
+			});
+		});
+		$(function(){
+			$(".back").click(function(){
+				location.href="/bw/board/contentPage.do?boardNo="+${boardNo };
 			});
 		});
 
@@ -205,24 +198,6 @@
 				$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
 			    $('#counter').html(content.length);	
 			});
-			$("#deleteButton").click(function(){
-				$("#showName").html("");
-				if ($.browser.msie) { // ie 일때  input[type=file] init. 
-					$("#uploadfile").replaceWith( $("#uploadfile").clone(true) ); 
-				} else { // other browser 일때 input[type=file] init. 
-					$("#uploadfile").val(""); 
-				}
-			});
-			$('#button').click(function(){
-				$("input[type='file']").trigger('click');
-			});
-			$("input[type='file']").change(function(){
-				$('#showName').text(this.value.replace(/C:\\fakepath\\/i, ''));
-				console.log($("#uploadfile").val());
-			});
 		});
-		
-		
-		
 	</script>
 </html>

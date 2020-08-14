@@ -89,7 +89,7 @@
 			</form>
 			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>
-			<button type="button" class="button back" style="width: 70px; margin-left: 10px;">본문으로</button>
+			<button type="button" class="button back" style="width: 70px; margin-left: 10px;">취소</button>
 		</div>
 	</section>	
 </body>
@@ -254,6 +254,12 @@
  					$('#showName3').text("");
  				}
  				
+ 				for(var i=0; i< files.length; i++){
+ 					if(files[i].name.length > 23){
+ 						alert("파일 이름이 20자가 넘습니다.");
+ 						$("#uploadfile").val(""); 
+ 					}
+ 				};
  				
  				for(var i = 0; i < files.length; i++){
  					if(fileSize[i] > 625000){

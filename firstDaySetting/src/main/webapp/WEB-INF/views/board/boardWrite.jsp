@@ -254,6 +254,14 @@
  				}
  				
  				
+ 				for(var i=0; i< files.length; i++){
+ 					if(files[i].name.length > 23){
+ 						alert("파일 이름이 20자가 넘습니다.");
+ 						$("#uploadfile").val(""); 
+ 					}
+ 				};
+ 				
+ 				
  				for(var i = 0; i < files.length; i++){
  					if(fileSize[i] > 625000){
  						alert("파일사이즈를 5MB 이하로 업로드 해주세요");

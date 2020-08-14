@@ -215,6 +215,12 @@ function fileDownload(filename, filepath) {
 					$('#showName3').text("");
 				}
 				
+ 				for(var i=0; i< files.length; i++){
+ 					if(files[i].name.length > 23){
+ 						alert("파일 이름이 20자가 넘습니다.");
+ 						$("#uploadfile").val(""); 
+ 					}
+ 				};
 				
 				for(var i = 0; i < files.length; i++){
 					if(fileSize[i] > 625000){

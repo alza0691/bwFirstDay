@@ -119,7 +119,7 @@
 				<input type="hidden" name="filepath" value="${b.filepath }">
 				<input type="hidden" id="boardContent2" value="${b.boardContent }">
 				<input type="hidden" name="boardNo" id="boardNo" value="${b.boardNo }">
-				<button onclick="update('${b.boardNo }', '${paging.type }', '${paging.keyword }', ${paging.reqPage })">수정</button>
+				<button type="button" onclick="update('${b.boardNo }', '${paging.type }', '${paging.keyword }', ${paging.reqPage })">수정</button>
 				<button type="button" class="delete">삭제</button>
 				<button type="button" class="return">목록으로</button>
 				<button type="button" class="reply" onclick="replyWrite('${b.boardNo}', '${paging.reqPage }', '${paging.type }', '${paging.keyword }' )">답글달기</button>
@@ -145,7 +145,7 @@
                         </tr>
                         <tr>
                         	<td width="70%" colspan="2">
-                                <textarea class="form-control" style="width: 100%;" name="boardCommentContent" id="boardCommentContent" placeholder="댓글은 내 얼굴입니다."></textarea>
+                                <textarea class="autosize2" style="width: 100%;" name="boardCommentContent" id="boardCommentContent" placeholder="댓글은 내 얼굴입니다."></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -181,6 +181,17 @@
 </body>
 
 <script>
+$(".autosize").on("keyup", function() {
+	var autosize = $(".autosize"); 
+	var size = autosize.prop('scrollHeight');
+	autosize.css("height",size);
+});
+$(".autosize2").on("keyup", function() {
+	var autosize = $(".autosize"); 
+	var size = autosize.prop('scrollHeight');
+	autosize.css("height",size);
+});
+
 function fileDownload(filename, filepath) {
 	var newFilename = encodeURIComponent(filename);
     var newFilepath = encodeURIComponent(filepath);
@@ -312,62 +323,126 @@ function update(boardNo, type, keyword, reqPage){
 		})//delete click end
 		
 		$("#commentBtn").click(function(){
-			$.ajax({
-				url: "/bw/board/boardCommentInsert.do",
-				data: 
-					{
-						boardCommentWriter:$("#boardCommentWriter").val()
-						, boardRef:$("#boardRef").val()
-						, boardCommentLevel:$("#boardCommentLevel").val()
-						, boardCommentRef:$("#boardCommentRef").val()
-						, boardCommentContent:$("#boardCommentContent").val()
-						, boardCommentPw:$("#boardCommentPw").val()
-					},
-				type: "get",
-				success: function(data){
-					if(data=='1'){
-						$("#boardCommentWriter").val("");
-						$("#boardCommentPw").val("");
-						$("#boardCommentContent").val("");
-						
-						//댓글 불러오기
-						$.ajax({
-							url: "/bw/board/selectOneComment.do",
-							data:
-								{
-									boardNo: $("#boardNo").val()
+	 		var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+=]).{6,20}$/;
+	 		var boardPwLength = $("#boardCommentPw").val().length;
+	 		if($("#boardCommentWriter").val() == ""){
+	 			$("#boardCommentWriter").focus();
+	 			alert("글쓴이를 입력해 주세요.");
+	 		} else if ($("#boardCommentTitle").val() == ""){
+	 			$("#boardCommentTitle").focus();
+	 			alert("제목을 입력해 주세요.");
+	 		} else if ($("#boardCommentContent").val() ==""){
+	 			$("#boardCommentContent").focus();
+	 			alert("콘텐츠를 입력해 주세요.");
+	 		} else if($("boardPw").val()==""){
+	 			$("#boardCommentPw").focus();
+	 			alert("비밀번호를 입력해 주세요.");
+	 		} else if($("#boardCommentPw").val().length < 6){ 
+	 			alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
+	 			$("#boardCommentPw").val("").focus();
+	 		} else if(!regExp.test($("#boardPw").val())){
+	 			alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
+	 			$("#boardCommentPw").val("").focus();
+	 		} else{
+				$.ajax({
+					url: "/bw/board/boardCommentInsert.do",
+					data: 
+						{
+							boardCommentWriter:$("#boardCommentWriter").val()
+							, boardRef:$("#boardRef").val()
+							, boardCommentLevel:$("#boardCommentLevel").val()
+							, boardCommentRef:$("#boardCommentRef").val()
+							, boardCommentContent:$("#boardCommentContent").val()
+							, boardCommentPw:$("#boardCommentPw").val()
+						},
+					type: "get",
+					success: function(data){
+						if(data=='1'){
+							$("#boardCommentWriter").val("");
+							$("#boardCommentPw").val("");
+							$("#boardCommentContent").val("");
+							
+							//댓글 불러오기
+							$.ajax({
+								url: "/bw/board/selectOneComment.do",
+								data:
+									{
+										boardNo: $("#boardNo").val()
+									},
+								type: "get",
+								success: function(data){
+										console.log("코멘트 불러오기 성공");
+										var html = "";
+											html += "<ul class='commentList'><li><span>" + data.boardCommentWriter + "</span></li>";
+											html += "<li><span>" + data.boardCommentDate + "</span></li>";
+											html += "<li><span>" + data.boardCommentContent + "</span>";
+											html += "<textarea class='form-control' name='boardCommentContent' style='display: none;'>" + data.boardCommentContent + "</textarea></li>"
+											html += "<li><a href='javascript:void(0)' onclick='modifyComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)' class='left'>수정</a>";
+											html += "<a href='javascript:void(0)' onclick='deleteComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)' class='left'>삭제</a></li>";
+										location.reload();
 								},
-							type: "get",
-							success: function(data){
-									console.log("코멘트 불러오기 성공");
-									var html = "";
-										html += "<ul class='commentList'><li><span>" + data.boardCommentWriter + "</span></li>";
-										html += "<li><span>" + data.boardCommentDate + "</span></li>";
-										html += "<li><span>" + data.boardCommentContent + "</span>";
-										html += "<textarea class='form-control' name='boardCommentContent' style='display: none;'>" + data.boardCommentContent + "</textarea></li>"
-										html += "<li><a href='javascript:void(0)' onclick='modifyComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)' class='left'>수정</a>";
-										html += "<a href='javascript:void(0)' onclick='deleteComment(this, &#39;" + data.boardCommentNo + "&#39;, &#39;" + data.boardRef + "&#39;)' class='left'>삭제</a></li>";
-									location.reload();
-							},
-							error: function(){
-								console.log("댓글 불러오기 ajax통신 실패"); 
-							}
-						}); //댓글 불러오기 끝
-						
-						
-					} else{
-						console.log("코멘트달기 실패");
+								error: function(){
+									console.log("댓글 불러오기 ajax통신 실패"); 
+								}
+							}); //댓글 불러오기 끝
+							
+							
+						} else{
+							console.log("코멘트달기 실패");
+						}
+					},//success 끝
+					error: function(){
+						alert("관리자에게 문의해 주세요");
 					}
-				},//success 끝
-				error: function(){
-					alert("관리자에게 문의해 주세요");
-				}
-			});//아작스 끝
+				});//아작스 끝
+	 		}
+
 		});
 			
 // 		$(".reply").click(function(){
 // 			location.href="/bw/board/replyWriteFrm.do?boardNo="+${b.boardNo };
 // 		});
+	});
+	
+	$(function(){
+		$("#boardCommentWriter").on("change keyup mousedown", function(){
+			if($("#boardCommentWriter").val().length != ""){
+				var checkCount = $(this).val().length;
+				var boardCommentWriter = $(this).val();					
+				var remain = 10-checkCount;
+				if(remain < 0){
+					alert("10를 초과할 수 없습니다.");
+					$("#boardCommentWriter").val(boardCommentWriter.slice(0,10));
+					return false;
+				} else if($.trim($("#boardCommentWriter").val())==""){
+					alert("빈칸을 입력할 수 없습니다.")
+					$("#boardCommentWriter").val(boardCommentWriter.slice(0,0));
+					return false;
+				}
+			}
+		});
+				
+		$("#boardCommentContent").on("change keyup mousedown", function(){
+			
+			var checkCount = $(this).val().length;
+			var boardCommentContent = $(this).val();					
+			var remain = 1000-checkCount;
+			if(remain < 0){
+				alert("1000글자를 초과할 수 없습니다.");
+				$("#boardCommentContent").val(boardCommentContent.slice(0,1000));
+				return false;
+			} 
+		});
+	});
+	$("#boardCommentPw").on("change keyup mousedown", function(){
+		var checkCount = $(this).val().length;
+		var boardCommentPw = $(this).val();					
+		var remain = 20-checkCount;
+		if(remain < 0){
+			alert("20글자를 초과할 수 없습니다.");
+			$("#boardCommentPw").val(boardCommentPw.slice(0,0));
+			return false;
+		} 
 	});
 	
 	function replyWrite(boardNo, reqPage, type, keyword){
@@ -434,6 +509,8 @@ function update(boardNo, type, keyword, reqPage){
     				}
                 } else{
                 	alert("비밀번호를 확인해 주세요.");
+                	$(obj).next().val("");
+                	$(obj).next().focus();
                 }
     		},
     		error: function(){
@@ -484,6 +561,8 @@ function update(boardNo, type, keyword, reqPage){
     				
                 } else{
                 	alert("비밀번호를 확인해 주세요.");
+                	$(obj).next().next().val("");
+                	$(obj).next().next().focus();
                 }
     		},
     		error: function(){

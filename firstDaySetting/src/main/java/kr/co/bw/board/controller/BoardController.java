@@ -198,11 +198,12 @@ public class BoardController {
 //		return "redirect:/bw/board/boardList.do";
 //	}
 	
-	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST)
-	public String boardWrite(BoardVO boardVo, @RequestParam("uploadfile[]") MultipartFile[] uploadfile) {
-		System.out.println(uploadfile);
-		boardVo.setFilename(saveFile(uploadfile));
-			
+	@ResponseBody
+	@RequestMapping(value="/boardWrite.do" ,method = RequestMethod.POST, consumes= {"multipart/form-data"})
+	public String boardWrite(@RequestParam(value="files") MultipartFile[] uploadfile, BoardVO boardVo) {
+		if(uploadfile.length != 0) {
+		boardVo.setFilename(saveFile(uploadfile));	
+		}
 	    if(boardVo.getFilename()==null) {
 	    	boardVo.setFilepath(null);
 	    } else {
@@ -211,13 +212,14 @@ public class BoardController {
 		int result = service.boardWirte(boardVo);
 		if (result == 1) {
 			System.out.println("글쓰기 성공");
+			return "1";
 		} else {
 			System.out.println("글쓰기 실패");
+			return "0";
 		}
-		return "redirect:/bw/board/boardList.do";
 	}
 	
-	private String saveFile(@RequestParam("uploadfile[]") MultipartFile[] file){
+	private String saveFile(@RequestParam("files") MultipartFile[] file){
 		String multifileName = "";
 		if(file[0].getSize() != 0) {
 			for(int i = 0; i < file.length; i++) {
@@ -269,9 +271,12 @@ public class BoardController {
 //		}
 //	}
 	
-	@RequestMapping(value = "/boardUpdate.do", method = RequestMethod.POST)
-	public String boardUpdate(BoardVO boardVo, @RequestParam("uploadfile[]") MultipartFile[] uploadfile, BoardData boardData){
+	@ResponseBody
+	@RequestMapping(value = "/boardUpdate.do", method = RequestMethod.POST, consumes= {"multipart/form-data"})
+	public String boardUpdate(BoardVO boardVo, @RequestParam("files") MultipartFile[] uploadfile, BoardData boardData){
+		if(uploadfile.length != 0) {
 	    boardVo.setFilename(saveFile(uploadfile));
+		}
 	    if(boardVo.getFilename()==null) {
 	    	boardVo.setFilepath(null);
 	    } else {
@@ -281,10 +286,10 @@ public class BoardController {
 		int result = service.boardUpdate(boardVo);
 		if (result == 1) {
 			System.out.println("수정성공");
-		return "redirect:/bw/board/contentPage.do?boardNo="+boardVo.getBoardNo()+ "&reqPage="+ boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
+		return "1";
 		} else {
 			System.out.println("수정실패");
-		return "redirect:/bw/board/boardUpdateFrm.do?boardNo="+boardVo.getBoardNo()+ "&reqPage="+ boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
+		return "0";
 		}
 	}
 	

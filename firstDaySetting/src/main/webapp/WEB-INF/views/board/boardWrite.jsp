@@ -64,14 +64,10 @@
 					</tr>
 	                <tr>
 	                    <td class="right" rowspan='2'>첨부파일</td>
-	                    <td>
-	                    <span id="dropZone">
-					                       파일을 드래그 하세요
-					                    </span></td>
+	                    <td id="dropZone" height=80px;>파일을 드래그 하세요<br>5MB 이하의 .jpg, .jpeg, .png, .gif 파일만 가능합니다. (총 3개)</td>
 	                </tr>
-	                <tr><td>
-						<span id="fileTableTbody"></span>
-						</td>
+	                <tr>
+	                	<td height= 100px; id="fileTableTbody"></td>
 					</tr>
 					<tr>
 						<td class="right">비밀번호</td>
@@ -79,7 +75,7 @@
 					</tr>
 				</table>
 			</form>
-			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;">제출</button>
+			<button type="button" id="submit" class="button" style="width: 70px; margin-left: 10px;" onclick="uploadFile();">제출</button>
 			<button type="button" class="button return" style="width: 70px; margin-left: 10px;">목록으로</button>
 		</div>
 	</section>	
@@ -111,9 +107,6 @@
 			$(".return").click(function(){
 				location.href="/bw/board/boardList.do";
 			});
-		});
-		$(document).ready(function() {
-		    var fileInput = document.getElementById("uploadfile");
 		});
 
 		$(function(){
@@ -173,120 +166,13 @@
 				return false;
 			} 
 		});
-		
-		$("#submit").click(function(){
-			console.log($("#boardPw").val());
-			var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+=]).{6,20}$/;
-			var boardPwLength = $("#boardPw").val().length;
-			if($("#boardWriter").val() == ""){
-				$("#boardWriter").focus();
-				alert("글쓴이를 입력해 주세요.");
-			} else if ($("#boardTitle").val() == ""){
-				$("#boardTitle").focus();
-				alert("제목을 입력해 주세요.");
-			} else if ($("#boardContent").val() ==""){
-				$("#boardContent").focus();
-				alert("콘텐츠를 입력해 주세요.");
-			} else if($("boardPw").val()==""){
-				$("#boardPw").focus();
-				alert("비밀번호를 입력해 주세요.");
-			} else if($("#boardPw").val().length < 6){ 
-				alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
-				$("#boardPw").val("").focus();
-			} else if(!regExp.test($("#boardPw").val())){
-				alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
-				$("#boardPw").val("").focus();
-			} else{
-				$("#form").submit();
-			}
-		});	
-		
+				
 		$(function(){
 			$("#boardContent").on("change keyup paste", function(e){
 				var content = $(this).val();
 				$(this).height(((content.split('\n').length + 1) * 1.5) + 'em');
 			    $('#counter').html(content.length);	
 			});
-			$("#deleteButton").click(function(){
-				$(".showName").html("");
-				if ($.browser.msie) { // ie 일때  input[type=file] init. 
-					$("#uploadfile").replaceWith( $("#uploadfile").clone(true) ); 
-				} else { // other browser 일때 input[type=file] init. 
-					$("#uploadfile").val(""); 
-				}
-			});
-			$('#button').click(function(){
-				$("#uploadfile").trigger('click');
-				
-			});
-			
-// 			$("#uploadfile").change(function(){
-// 				$('#showName1').text("");
-// 				$('#showName2').text("");
-// 				$('#showName3').text("");
-// 				var fileInput = document.getElementById("uploadfile");
-				
-// 				var files = fileInput.files;
-//  				var fileSize = new Array;
-//  				var browser=navigator.appName;
-//  				var arr = new Array;
- 				
-//  				if (browser=="Microsoft Internet Explorer"){
-//  					var oas = new ActiveXObject("Scripting.FileSystemObject");
-//  					fileSize = oas.getFile( fileInput.value ).size;
-//  				} else{
-//  					for(var i = 0; i < files.length; i++){
-//  						fileSize.push(fileInput.files[i].size);
-//  					}
-//  				}
- 				
-//  				if(files.length > 3){
-//  					alert("파일은 3개까지 첨부할 수 있습니다.");
-//  					$("#uploadfile").val(""); 
-//  					$('#showName1').text("");
-//  					$('#showName2').text("");
-//  					$('#showName3').text("");
-//  				}
- 				
- 				
-//  				for(var i=0; i< files.length; i++){
-//  					if(files[i].name.length > 23){
-//  						alert("파일 이름이 20자가 넘습니다.");
-//  						$("#uploadfile").val(""); 
-//  					}
-//  				};
- 				
- 				
-//  				for(var i = 0; i < files.length; i++){
-//  					if(fileSize[i] > 625000){
-//  						alert("파일사이즈를 5MB 이하로 업로드 해주세요");
-//  						$("#uploadfile").val(""); 
-//  						$('#showName1').text("");
-//  						$('#showName2').text("");
-//  						$('#showName3').text("");
-//  					} else{
-//  						for (var i = 0; i < files.length; i++) {
-// 						arr.push(fileInput.files[i].name);
-// 		            }
-// 					$('#showName1').text(arr[0]);
-// 					$('#showName2').text(arr[1]);
-// 					$('#showName3').text(arr[2]);
-// 					break;
-// 					}
-//  				}
- 						
-//  				if( $("#uploadfile").val() != "" ){
-//  					var ext = $("input[type='file']").val().split('.').pop().toLowerCase();
-//  					if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
-//  					alert('gif,png,jpg,jpeg 파일만 업로드 할수 있습니다.');
-//  					$("#uploadfile").val(""); 
-//  					$('#showName1').text("");
-//  					$('#showName2').text("");
-//  					$('#showName3').text("");
-//  					return;
-//  					}
-//  				}
-// 			});
 		});
 		   // 파일 리스트 번호
 	    var fileIndex = 0;
@@ -297,9 +183,9 @@
 	    // 파일 사이즈 리스트
 	    var fileSizeList = new Array();
 	    // 등록 가능한 파일 사이즈 MB
-	    var uploadSize = 50;
+	    var uploadSize = 5;
 	    // 등록 가능한 총 파일 사이즈 MB
-	    var maxUploadSize = 500;
+	    var maxUploadSize = 15;
 	 
 	    $(function (){
 	        // 파일 드롭 다운
@@ -349,7 +235,7 @@
 	    // 파일 선택시
 	    function selectFile(files){
 	        // 다중파일 등록
-	        if(files != null){
+	    	if(files != null){
 	            for(var i = 0; i < files.length; i++){
 	                // 파일 이름
 	                var fileName = files[i].name;
@@ -359,14 +245,20 @@
 	                // 파일 사이즈(단위 :MB)
 	                var fileSize = files[i].size / 1024 / 1024;
 	                
-	                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+	                if($.inArray(ext, ['jpg', 'jpeg', 'png', 'gif']) == -1){
 	                    // 확장자 체크
-	                    alert("등록 불가 확장자");
+	                    alert("5M 이하의 .jpg, .jpeg, .png, .gif 파일들만 가능합니다.");
 	                    break;
 	                }else if(fileSize > uploadSize){
 	                    // 파일 사이즈 체크
 	                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
 	                    break;
+	                } else if(files[i].name.length > 23){
+	                	// 파일 이름 체크
+	                	alert("파일 이름이 20자가 넘습니다.");
+	                } else if(fileIndex+1 > 3){
+                   		alert("3개 이하로 첨부해 주세요");
+                   		break;
 	                }else{
 	                    // 전체 파일 사이즈
 	                    totalFileSize += fileSize;
@@ -392,11 +284,9 @@
 	    // 업로드 파일 목록 생성
 	    function addFileList(fIndex, fileName, fileSize){
 	        var html = "";
-	        html += "<tr id='fileTr_" + fIndex + "'>";
-	        html += "    <td class='left' >";
-	        html +=         fileName + " / " + fileSize + "MB "  + "<a href='#' onclick='deleteFile(" + fIndex + "); return false;' class='btn small bg_02'>삭제</a>"
-	        html += "    </td>"
-	        html += "</tr>"
+	        html += "<span id='fileTr_" + fIndex + "'>";
+	        html +=         fileName +  "<a href='#' onclick='deleteFile(" + 0 + "); return false;' class='btn small bg_02'>삭제</a><br>"
+	        html += "</span>"
 	 
 	        $('#fileTableTbody').append(html);
 	    }
@@ -414,37 +304,59 @@
 	        
 	        // 업로드 파일 테이블 목록에서 삭제
 	        $("#fileTr_" + fIndex).remove();
+	        fileIndex--;
+	        
 	    }
 	 
 	    // 파일 등록
 	    function uploadFile(){
+			console.log($("#boardPw").val());
+			var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+=]).{6,20}$/;
+			var boardPwLength = $("#boardPw").val().length;
+			if($("#boardWriter").val() == ""){
+				$("#boardWriter").focus();
+				alert("글쓴이를 입력해 주세요.");
+			} else if ($("#boardTitle").val() == ""){
+				$("#boardTitle").focus();
+				alert("제목을 입력해 주세요.");
+			} else if ($("#boardContent").val() ==""){
+				$("#boardContent").focus();
+				alert("콘텐츠를 입력해 주세요.");
+			} else if($("boardPw").val()==""){
+				$("#boardPw").focus();
+				alert("비밀번호를 입력해 주세요.");
+			} else if($("#boardPw").val().length < 6){ 
+				alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
+				$("#boardPw").val("").focus();
+			} else if(!regExp.test($("#boardPw").val())){
+				alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
+				$("#boardPw").val("").focus();
+			} else{	    	
 	        // 등록할 파일 리스트
 	        var uploadFileList = Object.keys(fileList);
 	 
 	        // 파일이 있는지 체크
-	        if(uploadFileList.length == 0){
-	            // 파일등록 경고창
-	            alert("파일이 없습니다.");
-	            return;
-	        }
+// 	        if(uploadFileList.length == 0){
+// 	            // 파일등록 경고창
+// 	            alert("파일이 없습니다.");
+// 	            return;
+// 	        }
 	        
-	        // 용량을 500MB를 넘을 경우 업로드 불가
+	        // 용량을 15MB를 넘을 경우 업로드 불가
 	        if(totalFileSize > maxUploadSize){
 	            // 파일 사이즈 초과 경고창
 	            alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
 	            return;
 	        }
-	            
-	        if(confirm("등록 하시겠습니까?")){
+
 	            // 등록할 파일 리스트를 formData로 데이터 입력
 	            var form = $('#uploadForm');
-	            var formData = new FormData(form);
+	            var formData = new FormData(form[0]);
 	            for(var i = 0; i < uploadFileList.length; i++){
 	                formData.append('files', fileList[uploadFileList[i]]);
 	            }
-	            
 	            $.ajax({
-	                url:"업로드 경로",
+	                url:"/bw/board/boardWrite.do",
 	                data:formData,
 	                type:'POST',
 	                enctype:'multipart/form-data',
@@ -452,17 +364,16 @@
 	                contentType:false,
 	                dataType:'json',
 	                cache:false,
-	                success:function(result){
-	                    if(result.data.length > 0){
-	                        alert("성공");
-	                        location.reload();
+	                success:function(data){
+	                    if(data == '1'){
+	                        location.href="/bw/board/boardList.do";
 	                    }else{
-	                        alert("실패");
+	                        alert("관리자에게 문의하세요");
 	                        location.reload();
 	                    }
 	                }
-	            });
-	        }
+	            })
+	    	}
 	    }
 	</script>
 </html>

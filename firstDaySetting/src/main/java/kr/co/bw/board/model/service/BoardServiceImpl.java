@@ -1,9 +1,7 @@
 package kr.co.bw.board.model.service;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -219,6 +217,11 @@ public class BoardServiceImpl {
 	public int deleteFile(int boardNo) {
 		// TODO Auto-generated method stub
 		return dao.deleteFile(boardNo);
+	}
+
+	public List<BoardVO> excelDownload(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return dao.excelDownload(map);
 	}
 
 //	public Map<String, Object> ExcelUpload(File destFile) {

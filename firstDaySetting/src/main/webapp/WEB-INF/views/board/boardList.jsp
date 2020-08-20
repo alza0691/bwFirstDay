@@ -84,7 +84,12 @@
 		<div class="container">
 		<h1>리스트</h1>
 		<span><a href="/bw/board/boardWriteFrm.do">글쓰기</a></span>
-<!-- 		<span><a href="/bw/board/excelUpFrm.do">엑셀 업로드</a></span> -->
+		<form action="/bw/board/excelDownload.do" method="post" id="excel">
+			<input type="hidden" name="keyword" value="${keyword }">
+			<input type="hidden" name="type" value="${type }">
+			<button type="button" onclick="exportToExcel();">엑셀다운로드</button>
+		</form>
+		
 			<table>
 				<tr>
 					<td width="10%">번호</td>
@@ -200,5 +205,9 @@ function fileDownload(filename, filepath) {
 		document.body.appendChild(form);
 		form.submit();
 	}
+	function exportToExcel(){
+		$("#excel").submit();
+	}
+
 </script>
 </html>

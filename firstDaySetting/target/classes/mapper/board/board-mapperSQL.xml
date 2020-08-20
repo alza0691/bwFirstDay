@@ -203,4 +203,32 @@
   			, board_pw = '123123!a'
   		where board_no = #{boardNo}
   	</update>
+  	<select id="excelDownload" parameterType="map" resultType="board">
+	  	select *
+			from(
+				select rownum as rnum, b.* from
+					(select
+						board_no as boardNo,
+						board_ref as boardRef,					
+						lpad('└─', 3*(level-1)) || board_title as boardTitle,
+						board_content as boardContent,
+						board_writer as boardWriter,
+						board_date as boardDate,
+						(select count(*) from board_comment where board_ref = board_no) as commentCount,
+						level as boardLevel,
+						board_filename as filename
+					from board 
+						<if test="type!=null">
+							<if test="type.equals('boardTitle')"> 
+								where board_title like '%'||#{keyword}||'%'
+							</if>
+							<if test="type.equals('boardWriter')">
+								where board_writer like '%'||#{keyword}||'%'
+							</if>
+						</if>
+					start with board_ref is null
+					connect by prior board_no = board_ref
+					order siblings by board_no desc)b
+				)
+  	</select>
 </mapper>

@@ -124,5 +124,10 @@ public class BoardDaoImpl {
 		// TODO Auto-generated method stub
 		return sqlSession.update("board.boardDeleteUpdate", boardVo);
 	}
+
+	public List<BoardVO> excelDownload(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.excelDownload", map);
+	}
 	
 }

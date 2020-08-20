@@ -274,15 +274,45 @@ public class BoardController {
 	@ResponseBody
 	@RequestMapping(value = "/boardUpdate.do", method = RequestMethod.POST, consumes= {"multipart/form-data"})
 	public String boardUpdate(BoardVO boardVo, @RequestParam("files") MultipartFile[] uploadfile, BoardData boardData){
-		if(uploadfile.length != 0) {
-	    boardVo.setFilename(saveFile(uploadfile));
+		String multifileName = "";
+		if(boardVo.getFilename1() != null) {
+			multifileName +=  boardVo.getFilename1() + "*";
 		}
+		if(boardVo.getFilename2() != null) {
+			multifileName +=  boardVo.getFilename2() + "*";
+		}
+		if(boardVo.getFilename3() != null) {
+			multifileName +=  boardVo.getFilename3() + "*";
+		}
+		
+		if(uploadfile.length != 0) {
+	    multifileName += saveFile(uploadfile);
+		}
+		System.out.println(multifileName);
+		
+		boardVo.setFilename(multifileName);
+		
 	    if(boardVo.getFilename()==null) {
 	    	boardVo.setFilepath(null);
 	    } else {
 	    	boardVo.setFilepath(UPLOAD_PATH);
+	    	String name = boardVo.getFilename();
+	    	String[] arr = name.split("\\*");
+	    	try {
+	    		boardVo.setFilename1(arr[0]);
+	    		boardVo.setFilename2(arr[1]);
+	    		boardVo.setFilename3(arr[2]);
+				} catch(IndexOutOfBoundsException e) {
+					System.out.println(e);
+				}
+				try {
+					boardVo.setShowFilename1(arr[0].substring(arr[0].indexOf('_')+1));
+					boardVo.setShowFilename2(arr[1].substring(arr[1].indexOf('_')+1));
+					boardVo.setShowFilename3(arr[2].substring(arr[2].indexOf('_')+1));
+				} catch(IndexOutOfBoundsException e){
+					System.out.println(e);
+				}
 	    }
-	    System.out.println(boardData);
 		int result = service.boardUpdate(boardVo);
 		if (result == 1) {
 			System.out.println("수정성공");
@@ -320,7 +350,7 @@ public class BoardController {
 		try {
 		boardVo.setFilename1(arr[0]);
 		boardVo.setFilename2(arr[1]); 
-		boardVo.setFilename3(arr[3]); 
+		boardVo.setFilename3(arr[2]); 
 		} catch(IndexOutOfBoundsException e) {
 			System.out.println(e);
 		}

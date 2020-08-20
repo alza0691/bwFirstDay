@@ -176,32 +176,27 @@ function fileDownload(filename, filepath) {
 		var filename2 = "${boardVo.filename2}";
 		var filename3 = "${boardVo.filename3}";
 		
-		if(showFilename1 != ""){
-			fileList[0] = showFilename1;
-			fileIndex++;
-			var html="";
-			html += "<input type='hidden' name='filename1' value='${boardVo.filename1}'>";
-	       	$('#boardNo').next().append(html);
-		}
-		if(showFilename2 != ""){
-			fileList[1] = showFilename2;
-			fileIndex++;
-			var html="";
-			html += "<input type='hidden' name='filename2' value='${boardVo.filename2}'>";
-	       	$('#boardNo').next().append(html);
-		}
-		if(showFilename3 != ""){
-			fileList[2] = showFilename3;
-			fileIndex++;
-			var html="";
-			html += "<input type='hidden' name='filename3' value='${boardVo.filename3}'>";
-	       	$('#boardNo').next().append(html);
-		}
+		var filename = new Array("filename1", "filename2", "filename3");
 		
+		
+		if(filename1 != ""){
+			fileList[0] = filename1;
+			fileIndex++;
+		}
+		if(filename2 != ""){
+			fileList[1] = filename2;
+			fileIndex++;
+		}
+		if(filename3 != ""){
+			fileList[2] = filename3;
+			fileIndex++;
+		}
+		console.log(filename3);
 	    for(var i = 0; i < fileList.length; i++ ){
 			var html = "";
-	        html += "<span id='fileTr_" + fileIndex + "'>";
-	        html +=     fileList[i] + "<a href='#' onclick='deleteFile(" + fileIndex + "); return false;' class='btn small bg_02'>삭제</a><br>"
+	        html += "<span id='fileTr_" + (i+1) + "'>";
+	        html +=     fileList[i].substring(fileList[i].indexOf('_')+1) + "<a href='#' onclick='deleteFile(" + (i+1) + "); return false;' class='btn small bg_02'>삭제</a><br>";
+	        html += 	"<input type='hidden' name='" + filename[i] + "' value='" + fileList[i] + "'>";
 	        html += "</span>"
 	        $('#fileTableTbody').append(html);
 	    }
@@ -319,6 +314,8 @@ function fileDownload(filename, filepath) {
         
         // 업로드 파일 테이블 목록에서 삭제
         $("#fileTr_" + fIndex).remove();
+        
+        
         fileIndex--;
         
     }

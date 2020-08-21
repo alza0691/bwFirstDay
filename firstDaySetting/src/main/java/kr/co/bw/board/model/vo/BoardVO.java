@@ -16,10 +16,23 @@ public class BoardVO {
 	private String filepath;
 	private String filename;
 	private String filename1;
+	private String filename2;
+	private String filename3;
+	private String showFilename1;
+	private String showFilename2;
+	private String showFilename3;
+	private int rnum;
+
+	public int getRnum() {
+		return rnum;
+	}
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
 	public BoardVO(int boardNo, String boardTitle, String boardContent, String boardWriter, String boardDate,
 			String boardPw, String type, String keyword, int commentCount, int boardLevel, int boardRef,
 			String filepath, String filename, String filename1, String filename2, String filename3,
-			String showFilename1, String showFilename2, String showFilename3) {
+			String showFilename1, String showFilename2, String showFilename3, int rnum) {
 		super();
 		this.boardNo = boardNo;
 		this.boardTitle = boardTitle;
@@ -40,14 +53,8 @@ public class BoardVO {
 		this.showFilename1 = showFilename1;
 		this.showFilename2 = showFilename2;
 		this.showFilename3 = showFilename3;
+		this.rnum = rnum;
 	}
-	private String filename2;
-	private String filename3;
-	private String showFilename1;
-	private String showFilename2;
-	private String showFilename3;
-
-
 	public int getBoardNo() {
 		return boardNo;
 	}

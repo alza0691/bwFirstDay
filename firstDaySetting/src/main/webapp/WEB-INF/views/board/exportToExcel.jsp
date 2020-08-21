@@ -26,7 +26,7 @@
 
 				<c:forEach items="${list}" var="list" varStatus="status">
                 	<tr>
-	                	<td>${num}</td>
+	                	<td>${list.rnum}</td>
 	                	<td class="title" style="text-align: left;">
 		                	<p>
 		                		<c:forEach begin="2" end="${list.boardLevel }" >

@@ -37,7 +37,7 @@ public class BoardServiceImpl {
 		if (totalCount % numPerPage == 0) {				//총 페이지 수와 한페이당 게시물의 나머지가 0이면 추가적인 페이지를 가지고 올 필요가 없으므로
 			totalPage = totalCount / numPerPage;		//(총 페이지 수 = 총 게시글 / 한페이지당 게시물)
 		} else {										//나누어 지면 총 페이지에서 넘어가지 않고 딱 떨어짐
-			totalPage = totalCount / numPerPage + 1;	//그렇지 않은 것은 한 페이지가 더 필요함
+			totalPage = (totalCount / numPerPage) + 1;	//그렇지 않은 것은 한 페이지가 더 필요함
 		}	
 		
 		//조회해 올 게시물 (보여지는 페이지) 시작번호와 끝번호 연산

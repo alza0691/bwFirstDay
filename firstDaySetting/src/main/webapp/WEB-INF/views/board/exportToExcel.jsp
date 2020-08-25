@@ -3,7 +3,7 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
     <script type='text/javascript' src='http://code.jquery.com/jquery-3.3.1.js'></script>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <% 
   String filename = request.getAttribute("filename").toString();
@@ -32,10 +32,8 @@
 		                		<c:forEach begin="2" end="${list.boardLevel }" >
 		                			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		                		</c:forEach>
-
 		                		${list.boardTitle2 }
-		                				<c:if test="${list.commentCount != 0}">(${list.commentCount })</c:if>
-		                			
+		                		<c:if test="${list.commentCount != 0}">(${list.commentCount })</c:if>
 		                	</p>
 	                	</td>
 	                	<td><c:if test="${list.filename != null }">유첨</c:if></td>

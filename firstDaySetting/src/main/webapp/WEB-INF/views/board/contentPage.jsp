@@ -3,7 +3,7 @@
 <script type='text/javascript' src='http://code.jquery.com/jquery-3.3.1.js'></script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>게시판 내용</title>
@@ -323,7 +323,7 @@ function update(boardNo, type, keyword, reqPage){
 		})//delete click end
 		
 		$("#commentBtn").click(function(){
-	 		var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+=]).{6,20}$/;
+			var regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+=]).{6,20}$/;
 	 		var boardPwLength = $("#boardCommentPw").val().length;
 	 		if($("#boardCommentWriter").val() == ""){
 	 			$("#boardCommentWriter").focus();
@@ -334,13 +334,13 @@ function update(boardNo, type, keyword, reqPage){
 	 		} else if ($("#boardCommentContent").val() ==""){
 	 			$("#boardCommentContent").focus();
 	 			alert("콘텐츠를 입력해 주세요.");
-	 		} else if($("boardPw").val()==""){
+	 		} else if($("#boardCommentPw").val()==""){
 	 			$("#boardCommentPw").focus();
 	 			alert("비밀번호를 입력해 주세요.");
 	 		} else if($("#boardCommentPw").val().length < 6){ 
 	 			alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
 	 			$("#boardCommentPw").val("").focus();
-	 		} else if(!regExp.test($("#boardPw").val())){
+	 		} else if(!regExp.test($("#boardCommentPw").val())){
 	 			alert("비밀번호를 확인해주세요. \n숫자, 문자, 특수문자를 조합한 6이상 20이하의 비밀번호를 입력해 주세요.")
 	 			$("#boardCommentPw").val("").focus();
 	 		} else{

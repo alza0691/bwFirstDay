@@ -360,26 +360,38 @@ public class BoardController {
 		return "board/replyWrite";
 	}
 	
-	@RequestMapping(value="/replyWrite.do")
-	public String replyWrite(BoardVO boardVo, BoardData boardData, HttpServletRequest request) {
+	@ResponseBody
+	@RequestMapping(value="/replyWrite.do" ,method = RequestMethod.POST, consumes= {"multipart/form-data"})
+	public String replyWrite(@RequestParam(value="files") MultipartFile[] uploadfile, BoardVO boardVo, BoardData boardData, HttpServletRequest request) {
+		if(uploadfile.length != 0) {
+			boardVo.setFilename(saveFile(uploadfile));	
+			}
+		    if(boardVo.getFilename()==null) {
+		    	boardVo.setFilepath(null);
+		    } else {
+		    	boardVo.setFilepath(UPLOAD_PATH);
+		    }
+		    
+		    
 		int result = service.replyInsert(boardVo);
 		if (result == 1) {
 			System.out.println("글쓰기 성공");
+			return "1";
 			
 		} else {
 			System.out.println("글쓰기 실패");
+			return "0";
 		}
-		BoardData data = service.selectBoardList(boardData.getReqPage(), boardData.getType(), boardData.getKeyword());
-		//return "redirect:/bw/board/boardList.do?reqPage"+ reqPage + "type=" + ${type} + "&keyword=" + ${keyword};
-		request.setAttribute("list", data.getList());
-		request.setAttribute("pageNavi", data.getPageNavi());
-		request.setAttribute("reqPage", boardData.getReqPage());
-		request.setAttribute("type", boardData.getType());
-		request.setAttribute("keyword", boardData.getKeyword());
-		request.setAttribute("totalPage", data.getTotalPage());
-		request.setAttribute("totalCount", data.getTotalCount());
-		request.setAttribute("numPerPage", data.getNumPerPage());
-		return "redirect:/bw/board/boardList.do?reqPage=" + boardData.getReqPage() + "&type=" + boardData.getType() + "&keyword=" + boardData.getKeyword();
+//		BoardData data = service.selectBoardList(boardData.getReqPage(), boardData.getType(), boardData.getKeyword());
+//		//return "redirect:/bw/board/boardList.do?reqPage"+ reqPage + "type=" + ${type} + "&keyword=" + ${keyword};
+//		request.setAttribute("list", data.getList());
+//		request.setAttribute("pageNavi", data.getPageNavi());
+//		request.setAttribute("reqPage", boardData.getReqPage());
+//		request.setAttribute("type", boardData.getType());
+//		request.setAttribute("keyword", boardData.getKeyword());
+//		request.setAttribute("totalPage", data.getTotalPage());
+//		request.setAttribute("totalCount", data.getTotalCount());
+//		request.setAttribute("numPerPage", data.getNumPerPage());
 	}
 	
 	@ResponseBody

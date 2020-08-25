@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <script type='text/javascript' src='http://code.jquery.com/jquery-3.3.1.js'></script>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>글쓰기</title>
